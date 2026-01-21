@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,13 +19,13 @@ public class BlueShortAutonomousOpMode_Linear extends LinearOpMode {
     {
         OpModeHelper helper = new OpModeHelper(
                 "FL", "FR", "BL", "BR",
-                "FW", "F1", "F2",
+                "FW1", "FW2", "IN1", "IN2",
                 "PINPOINT",
                 hardwareMap,
                 DistanceUnit.MM, AngleUnit.DEGREES,
                 -95.25, 19.05,
-                DcMotor.Direction.REVERSE, DcMotor.Direction.REVERSE, DcMotor.Direction.REVERSE, DcMotor.Direction.FORWARD,
-                DcMotor.Direction.FORWARD, DcMotor.Direction.FORWARD, DcMotor.Direction.REVERSE,
+                DcMotor.Direction.REVERSE, DcMotor.Direction.REVERSE, DcMotor.Direction.FORWARD, DcMotor.Direction.REVERSE,
+                DcMotor.Direction.FORWARD, DcMotor.Direction.FORWARD, DcMotor.Direction.FORWARD, DcMotor.Direction.FORWARD,
                 GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD,
                 GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED,
                 telemetry
@@ -40,12 +41,10 @@ public class BlueShortAutonomousOpMode_Linear extends LinearOpMode {
         DcMotor backRightDrive = helper.backRightDrive;
 
         // Flywheels and Launcher Feeder
-        DcMotor flywheelMotor = helper.flywheelMotor;
-        CRServo feeder1 = helper.feeder2;
-        CRServo feeder2 = helper.feeder2;
+        DcMotorEx flywheelMotor = (DcMotorEx) helper.flywheelMotor1;
 
         // goBilda Pinpoint Odometry Computer
-        GoBildaPinpointDriver pinpoint = helper.pinpoint;
+        //GoBildaPinpointDriver pinpoint = helper.pinpoint;
         double xPos = helper.xPos;
         double yPos = helper.yPos;
         DistanceUnit du = DistanceUnit.MM;
@@ -62,7 +61,7 @@ public class BlueShortAutonomousOpMode_Linear extends LinearOpMode {
         runtime.reset();
 
         // Drive Backwards
-        while (opModeIsActive() && runtime.seconds() < 2.5)
+        while (opModeIsActive() && runtime.seconds() < 4)
         {
             frontLeftDrive.setPower(-helper.autoSpeedMod);
             backLeftDrive.setPower(-helper.autoSpeedMod);
@@ -76,9 +75,9 @@ public class BlueShortAutonomousOpMode_Linear extends LinearOpMode {
         backRightDrive.setPower(0.0);
 
         // Start Launcher Flywheel
-        flywheelMotor.setPower(0.5);
+        flywheelMotor.setVelocity(660);
 
-        sleep(5000);
+        sleep(6000);
 
         telemetry.addData("Status", "Starting Feeders");
         telemetry.update();
@@ -87,8 +86,7 @@ public class BlueShortAutonomousOpMode_Linear extends LinearOpMode {
         // Start Feeders
         while (opModeIsActive() && runtime.seconds() < 8.5)
         {
-            feeder1.setPower(0.4);
-            feeder2.setPower(0.4);
+
         }
 
         // Turn off Flywheel and Feeders
@@ -96,14 +94,11 @@ public class BlueShortAutonomousOpMode_Linear extends LinearOpMode {
         telemetry.update();
         runtime.reset();
 
-        feeder1.setPower(0.0);
-        feeder2.setPower(0.0);
-
         telemetry.addData("Status", "Stopping Flywheel");
         telemetry.update();
         runtime.reset();
 
-        flywheelMotor.setPower(0.0);
+        flywheelMotor.setVelocity(0.0);
 
         telemetry.addData("Status", "Driving Left");
         telemetry.update();
@@ -112,10 +107,10 @@ public class BlueShortAutonomousOpMode_Linear extends LinearOpMode {
         // Drive Left
         while (opModeIsActive() && runtime.seconds() < 1.0)
         {
-            frontLeftDrive.setPower(-helper.autoSpeedMod);
-            backLeftDrive.setPower(helper.autoSpeedMod);
-            frontRightDrive.setPower(helper.autoSpeedMod);
-            backRightDrive.setPower(-helper.autoSpeedMod);
+            frontLeftDrive.setPower(-helper.autoSpeedMod * 2);
+            backLeftDrive.setPower(helper.autoSpeedMod * 2);
+            frontRightDrive.setPower(-helper.autoSpeedMod * 2);
+            backRightDrive.setPower(helper.autoSpeedMod * 2);
         }
 
         frontLeftDrive.setPower(0.0);

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
@@ -27,13 +28,15 @@ public class OpModeHelper {
     DcMotor frontRightDrive = null;
     DcMotor backRightDrive = null;
 
-    // Flywheels and Launcher Feeder
-    DcMotor flywheelMotor = null;
-    CRServo feeder1 = null;
-    CRServo feeder2 = null;
+    // Flywheels and Launcher
+    DcMotor flywheelMotor1 = null;
+    DcMotor flywheelMotor2 = null;
+
+    DcMotor intakeMotor1 = null;
+    DcMotor intakeMotor2 = null;
 
     // goBilda Pinpoint Odometry Computer
-    GoBildaPinpointDriver pinpoint = null;
+    //GoBildaPinpointDriver pinpoint = null;
     double xPos = 0.0;
     double yPos = 0.0;
     double heading = 0.0;
@@ -47,8 +50,8 @@ public class OpModeHelper {
             /// Hardware Names
             // Drive Train Motors
             String FL_NAME, String FR_NAME, String BL_NAME, String BR_NAME,
-            // Shooting Mechanism Motors & Servos
-            String FW_NAME, String F1_NAME, String F2_NAME,
+            // Shooting Mechanism Motors
+            String FW1_NAME, String FW2_NAME, String IN1_NAME, String IN2_NAME,
             // Odometry Computer
             String PINPOINT_NAME,
             /// Hardware Values
@@ -62,7 +65,7 @@ public class OpModeHelper {
             // Drive Train Directions
             DcMotor.Direction FLDir, DcMotor.Direction BLDir, DcMotor.Direction FRDir, DcMotor.Direction BRDir,
             // Shooting Mechanism Directions
-            DcMotor.Direction FWDir, DcMotor.Direction F1Dir, DcMotor.Direction F2Dir,
+            DcMotor.Direction FW1Dir, DcMotor.Direction FW2Dir, DcMotor.Direction IN1Dir, DcMotor.Direction IN2Dir,
             // Odometry Computer
             GoBildaPinpointDriver.GoBildaOdometryPods OdometryPodType,
             GoBildaPinpointDriver.EncoderDirection EncoderDirectionX, GoBildaPinpointDriver.EncoderDirection EncoderDirectionY,
@@ -78,12 +81,13 @@ public class OpModeHelper {
         backRightDrive = hardwareMap.get(DcMotor.class, BR_NAME);
 
         // Declare Launcher Locations
-        flywheelMotor = hardwareMap.get(DcMotor.class, FW_NAME);
-        feeder1 = hardwareMap.get(CRServo.class, F1_NAME);
-        feeder2 = hardwareMap.get(CRServo.class, F2_NAME);
+        flywheelMotor1 = hardwareMap.get(DcMotorEx.class, FW1_NAME);
+        flywheelMotor2 = hardwareMap.get(DcMotorEx.class, FW2_NAME);
+        intakeMotor1 = hardwareMap.get(DcMotor.class, IN1_NAME);
+        intakeMotor2 = hardwareMap.get(DcMotor.class, IN2_NAME);
 
         // Declare goBilda Pinpoint Odometry Computer
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, PINPOINT_NAME);
+        //pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, PINPOINT_NAME);
 
         // Telemetry
         telemetry = telemetryUpdater;
@@ -94,20 +98,26 @@ public class OpModeHelper {
         frontRightDrive.setDirection(FRDir);
         backRightDrive.setDirection(BRDir);
 
-        // Set Launcher Motor and Servo Directions
-        flywheelMotor.setDirection(FWDir);
-        feeder1.setDirection(F1Dir);
-        feeder2.setDirection(F2Dir);
+        // Set Launcher Motor Directions
+        flywheelMotor1.setDirection(FW1Dir);
+        flywheelMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flywheelMotor2.setDirection(FW2Dir);
+        flywheelMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        intakeMotor1.setDirection(IN1Dir);
+        intakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeMotor2.setDirection(IN2Dir);
+        intakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Initialize Pinpoint Odometry Computer
-        pinpoint.initialize();
-        pinpoint.setOffsets(OffsetX, OffsetY, distanceUnit);
-        pinpoint.setEncoderResolution(OdometryPodType);
-        pinpoint.setEncoderDirections(EncoderDirectionX, EncoderDirectionY);
+        //pinpoint.initialize();
+        //pinpoint.setOffsets(OffsetX, OffsetY, distanceUnit);
+        //pinpoint.setEncoderResolution(OdometryPodType);
+        //pinpoint.setEncoderDirections(EncoderDirectionX, EncoderDirectionY);
 
-        pinpoint.resetPosAndIMU();
+        //pinpoint.resetPosAndIMU();
         Pose2D startPos = new Pose2D(distanceUnit, 0, 0, angleUnit, 0);
-        pinpoint.setPosition(startPos);
+        //pinpoint.setPosition(startPos);
     }
 
     /// Functions
