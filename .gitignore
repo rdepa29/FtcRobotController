@@ -40,7 +40,7 @@ proguard/
 captures/
 
 # Zed
-zed/
+.zed/
 
 # IntelliJ
 *.iml
