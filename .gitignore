@@ -39,9 +39,6 @@ proguard/
 # Android Studio captures folder
 captures/
 
-# Zed
-.zed/
-
 # IntelliJ
 *.iml
 .idea/
