@@ -29,6 +29,15 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
  * motor that is in {@code RUN_USING_ENCODER} is an error, and mixing the two is the
  * easiest way to end up with drivetrain motors that refuse to move. This class
  * deliberately reads positions and never changes the mode the drivetrain set up.
+ *
+ * <h2>References</h2>
+ *
+ *  The fallback used when no Pinpoint is wired up. The hub IMU appears in the
+ *  hardware map under the name imu on both the Control Hub and the Expansion Hub:
+ *    https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+ *
+ *  Yaw is read as firstAngle with AxesOrder.ZYX. Orientation has no
+ *  getYaw(AngleUnit) method; firstAngle is a public field.
  */
 public class EncoderOdometry implements Odometry {
 

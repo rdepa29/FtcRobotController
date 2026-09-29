@@ -26,6 +26,12 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
  * <p>Timing that cannot be expressed as a target, like a 300 ms settle before a
  * shooter, goes in with {@link #addWait}. The clock starts when the wait begins, not
  * when the OpMode starts, so a slow approach does not eat into it.
+ *
+ * <h2>References</h2>
+ *
+ *  A list of goTo targets that advances one step at a time. Nothing to configure
+ *  beyond the targets; see RobotOpMode for the lifecycle it runs inside:
+ *    https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
  */
 public class DriveSequence {
 

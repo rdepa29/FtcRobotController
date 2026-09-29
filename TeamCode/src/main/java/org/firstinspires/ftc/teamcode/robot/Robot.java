@@ -32,6 +32,13 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
  * anyway. A constructor taking a {@code Robot} is enough, and it keeps the call sites
  * looking like ordinary code instead of a framework. When a second mechanism shows up
  * and they need to talk to each other, this is the class that grows.
+ *
+ * <h2>References</h2>
+ *
+ *  Module assembly. Every team ships one APK, so all of these classes load together,
+ *  and the lazy lookups here are what keep an OpMode from initializing hardware it
+ *  never asked for:
+ *    https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
  */
 public class Robot {
 

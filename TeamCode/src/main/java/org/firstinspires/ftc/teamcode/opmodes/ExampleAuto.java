@@ -10,6 +10,13 @@ import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
  * exists to prove the loop is closed: if these targets are hit repeatably and the pose
  * on telemetry is sane, the drivetrain, the odometry, and the control loop are working,
  * and every routine after this one is just more lines of the same shape.
+ *
+ * <h2>References</h2>
+ *
+ *  Autonomous structure:
+ *    https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
+ *
+ *  Thirty seconds is the AUTO period, so device calibration cannot happen inside it.
  */
 @Autonomous(name = "Drive: Example Auto", group = "01 Drive")
 public class ExampleAuto extends RobotOpMode {

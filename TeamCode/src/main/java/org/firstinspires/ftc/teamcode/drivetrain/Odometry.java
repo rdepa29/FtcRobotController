@@ -15,6 +15,17 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * {@code AprilTagDetection.robotPose} will not give you an absolute field position
  * out of the box. Odometry is the only source of absolute position, which is why
  * {@link PinpointOdometry} is the default and not an optional extra.
+ *
+ * <h2>References</h2>
+ *
+ *    https://www.gobilda.com/content/user_manuals/3110-0002-0001%20User%20Guide.pdf
+ *    https://github.com/goBILDA-Official/FtcRobotController-Add-Pinpoint
+ *
+ *  Important for BIOBUZZ: the SDK ships all four field AprilTag clusters, but FIRST
+ *  published every cluster's field position as {0,0,0} with identity orientation.
+ *  AprilTagDetection.robotPose will therefore NOT return a usable absolute field
+ *  position out of the box, which makes odometry the only reliable source. That is
+ *  why PinpointOdometry is the default and not an optional extra. See manual 9.9.
  */
 public interface Odometry {
 

@@ -13,6 +13,12 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
  * <p>Fields are intentionally public and mutable rather than hidden behind a builder,
  * because the fastest way to change a robot is to change one line here and re-push.
  * Nothing mutates these after startup.
+ *
+ * <h2>References</h2>
+ *
+ *  Hardware names come from the Robot Controller configuration file, edited in the
+ *  Driver Station app. Every name here must match it exactly, including case:
+ *    https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
  */
 public class DriveConfig {
 

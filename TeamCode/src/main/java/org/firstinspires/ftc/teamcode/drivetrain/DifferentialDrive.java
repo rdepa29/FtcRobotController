@@ -16,6 +16,12 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
  * <p>Strafing is not physically available, so {@code roll} is accepted and discarded.
  * A {@link Drive} on a differential base will simply fail to strafe, which is the
  * correct behavior; it will not silently spin.
+ *
+ * <h2>References</h2>
+ *
+ *  Included because the drivetrain type is the thing that changes most often in a
+ *  season, and it should be a one-line change in the OpMode rather than a rewrite:
+ *    https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
  */
 public class DifferentialDrive implements Drivetrain {
 

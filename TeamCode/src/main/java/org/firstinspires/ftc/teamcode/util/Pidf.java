@@ -10,6 +10,11 @@ package org.firstinspires.ftc.teamcode.util;
  *
  * <p>Pure math: no hardware, no time source. {@link #update(double error, double dt)}
  * takes the elapsed time as a parameter, which is what makes it testable.
+ *
+ * <h2>References</h2>
+ *
+ *  A textbook PIDF controller. Nothing in the codebase uses this yet; it exists
+ *  for the mechanisms (lifters, flywheels, feeders) that arrive with the hardware.
  */
 public class Pidf {
 

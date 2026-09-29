@@ -38,6 +38,24 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
  *
  * <p>That is the whole design. If a routine needs behavior this does not have, write
  * it out of these calls instead of adding a layer underneath them.
+ *
+ * <h2>References</h2>
+ *
+ *  This is the API most routines use. The conventions it assumes:
+ *    - setPower / driveField take forward, strafe, turn in the range -1 to 1.
+ *      setPower is robot-relative, driveField is field-relative.
+ *    - Positive strafe is the robot's LEFT, matching Drivetrain.drive().
+ *    - goTo / turnTo / turnBy are non-blocking: they set a target, update() steers
+ *      toward it, and isBusy() reports when it is done.
+ *    - Units are inches and degrees everywhere. See Pose.
+ *
+ *  Field-relative driving, and the rotation that makes it work:
+ *    https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
+ *    https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
+ *
+ *  The control law is a plain P on position with a small D on heading, tuned in
+ *  DriveConfig. An integral term is deliberately absent: it converges nicely on the
+ *  field you tuned it on and badly on every other one.
  */
 public class Drive {
 

@@ -5,6 +5,11 @@ package org.firstinspires.ftc.teamcode.util;
  *
  * <p>Everything here is deterministic and easy to unit test on a plain JVM, which
  * matters because these are the functions you will be tuning mid-competition.
+ *
+ * <h2>References</h2>
+ *
+ *  Pure math: angles, clamping, normalization, dead zones. No SDK types, so this
+ *  is the one file here that can be unit tested without a robot.
  */
 public final class MathUtils {
 

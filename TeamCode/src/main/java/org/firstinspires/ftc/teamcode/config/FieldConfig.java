@@ -15,6 +15,25 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
  *
  * <p>Source: FIRST Tech Challenge Competition Manual, BIOBUZZ, Section 9 (ARENA).
  * Current manual is Team Update 02, updated 24 Sep 2026.
+ *
+ * <h2>References</h2>
+ *
+ *  Field dimensions and object geometry come from the BIOBUZZ Competition Manual,
+ *  which FIRST treats as the source of truth for the season:
+ *    https://ftc-resources.firstinspires.org/ftc/game/manual
+ *
+ *  Sections worth reading before changing anything in this file:
+ *    9.2  FIELD                    overall dimensions and accuracy
+ *    9.3  Areas, Zones, Markings    loading zone, garden, boundary lines
+ *    9.4  TILE Coordinates         the A-F / 1-6 grid used by Tile
+ *    9.5  ALLIANCE AREA           alliance side of the field
+ *    9.6  HIVE Structure          the center structure this code calls the HIVE
+ *    9.7  FLOWER                  the corner scoring structures
+ *    9.8  SCORING ELEMENTS        CELL and POLLEN
+ *    9.9  AprilTags               field tag locations
+ *
+ *  Values marked CONFIRMED were read out of that manual. Values marked MEASURE are
+ *  placeholders and must be replaced before a routine depends on them.
  */
 public class FieldConfig {
 
@@ -34,7 +53,7 @@ public class FieldConfig {
     //
     // The manual defines columns A-F and rows 1-6, and states that red occupies
     // columns A, B, C and blue occupies D, E, F, viewed with red on the left
-    // from the primary audience viewing direction. (Section 9.5, rule G304.)
+    // from the primary audience viewing direction. (Section 9.4, TILE Coordinates.)
     //
     // CONFIRMED: red loading zone is tile A5, red garden is tile A1,
     //            blue loading zone is tile F2, blue garden is tile F6.

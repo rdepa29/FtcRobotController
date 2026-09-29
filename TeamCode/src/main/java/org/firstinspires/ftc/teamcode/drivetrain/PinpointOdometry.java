@@ -22,6 +22,26 @@ import org.firstinspires.ftc.teamcode.config.DriveConfig;
  * while that reset happens. That is why the base OpMode exposes an init loop: it is
  * the only place where you can wait for the driver to finish calibrating without
  * eating into the 30 second autonomous period.
+ *
+ * <h2>References</h2>
+ *
+ *    https://www.gobilda.com/content/user_manuals/3110-0002-0001%20User%20Guide.pdf
+ *    https://github.com/goBILDA-Official/FtcRobotController-Add-Pinpoint
+ *
+ *  From the goBILDA User Guide, the offset convention used in DriveConfig:
+ *    - The X pod offset is how far sideways the X (forward) pod sits from the
+ *      tracking point. LEFT of center is POSITIVE, right of center negative.
+ *    - The Y pod offset is how far forward the Y (strafe) pod sits from the tracking
+ *      point. FORWARD of center is positive, backward negative.
+ *
+ *  Also from the guide, and the reason for the ordering in configure():
+ *    - setEncoderDirections: the X pod must INCREASE when the robot moves forward,
+ *      and the Y pod must INCREASE when the robot moves LEFT.
+ *    - recalibrateIMU and resetPosAndIMU both need the robot stationary and take
+ *      about 0.25s, which is why they belong in init_loop() and not loop().
+ *    - Rotating the robot in place should keep position within about 4 inches. If it
+ *      swings further, one of the pod offsets has the wrong sign.
+ *    - A closed loop back to the start point should land within about 10mm.
  */
 public class PinpointOdometry implements Odometry {
 

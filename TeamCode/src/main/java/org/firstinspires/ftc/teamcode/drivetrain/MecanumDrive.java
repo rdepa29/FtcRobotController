@@ -20,6 +20,16 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
  * <p>If the third one goes the wrong way, that is not a software bug. Mecanum rollers
  * are laid out in one of two mirror-image arrangements and yours may be the other one;
  * set {@link DriveConfig#mirrorStrafe} rather than editing the formula.
+ *
+ * <h2>References</h2>
+ *
+ *    https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
+ *    https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
+ *
+ *  Both cover the roller arrangement this file depends on: viewed from above, the
+ *  rollers must form an X pointing at the center of the robot, not a rhombus. Wheels
+ *  in the other arrangement still strafe, just to the wrong side, which is what
+ *  DriveConfig.mirrorStrafe corrects.
  */
 public class MecanumDrive implements Drivetrain {
 

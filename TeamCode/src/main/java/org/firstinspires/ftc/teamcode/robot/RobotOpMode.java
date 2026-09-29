@@ -30,6 +30,21 @@ import org.firstinspires.ftc.teamcode.drivetrain.Drive;
  * of stillness to calibrate that have to be spent somewhere other than inside the
  * 30 second autonomous period. Writing the hooks out is a few more lines and it is
  * worth it.
+ *
+ * <h2>References</h2>
+ *
+ *  OpMode lifecycle, per the SDK:
+ *    https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+ *
+ *    init()       once, when INIT is pressed.
+ *    init_loop()  repeatedly, until PLAY. The only safe place to wait on device
+ *                 calibration, because it is not inside the 30 second AUTO.
+ *    loop()       repeatedly, until STOP.
+ *    stop()       once. An OpMode can still touch hardware here, but the robot is
+ *                 already disabled by the time it runs, so do not rely on it.
+ *
+ *  loop() and stop() are final in this base class so a subclass cannot skip the
+ *  odometry update or leave the motors running.
  */
 public abstract class RobotOpMode extends OpMode {
 

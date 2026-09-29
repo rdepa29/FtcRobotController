@@ -15,6 +15,17 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
  *
  * <p>No OpenCV, no OpMode state, no timing. Safe to construct in a unit test only if
  * you use the {@link #absent(String)} factory instead of the hardware map one.
+ *
+ * <h2>References</h2>
+ *
+ *  Wraps DcMotorEx. Two SDK details this file depends on:
+ *    https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+ *
+ *    - There is NO setPosition() on a DcMotorEx. RunMode.STOP_AND_RESET_ENCODER is
+ *      the only supported way to zero an encoder.
+ *    - Commanding setPower() on a motor in RUN_USING_ENCODER is an error, not a
+ *      no-op. Drivetrain motors therefore stay in RUN_WITHOUT_ENCODER, where encoder
+ *      positions are still readable.
  */
 public class DriveMotor {
 

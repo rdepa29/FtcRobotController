@@ -19,6 +19,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  *
  * <p>Getting these three right is the whole job of this interface. If the robot turns
  * the wrong way, fix the sign here, not in the OpMode.
+ *
+ * <h2>References</h2>
+ *
+ *  The mixing interface, kept deliberately narrow so a change of drivetrain never has
+ *  to reach the control loop above it:
+ *    https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
+ *    https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
  */
 public interface Drivetrain {
 

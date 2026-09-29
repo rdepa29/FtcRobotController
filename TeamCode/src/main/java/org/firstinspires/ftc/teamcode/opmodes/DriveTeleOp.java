@@ -12,6 +12,14 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
  * turn on the right stick's Y. Hold the left bumper to switch between robot-relative
  * and field-relative driving, which is the fastest way to convince yourself why
  * field-relative is nicer.
+ *
+ * <h2>References</h2>
+ *
+ *  Gamepad input fields and stick conventions:
+ *    https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+ *
+ *  Note that Gamepad exposes right_stick_x and right_stick_y as flat float fields,
+ *  not as a nested right_stick object.
  */
 @TeleOp(name = "Drive: TeleOp", group = "01 Drive")
 public class DriveTeleOp extends RobotOpMode {

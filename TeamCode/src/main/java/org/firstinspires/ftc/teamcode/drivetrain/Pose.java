@@ -32,6 +32,22 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
  * inches. Heading 0 degrees means facing along the +Y axis, positive headings turn
  * counter-clockwise. See {@link org.firstinspires.ftc.teamcode.config.FieldConfig}
  * for which physical corner that is, and confirm it against the field CAD.
+ *
+ * <h2>References</h2>
+ *
+ *  The type being wrapped is Pose2D, which carries its units in the fields, so every
+ *  read has to name one:
+ *    https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+ *
+ *  Coordinate convention used throughout this codebase, and the one FTC uses:
+ *    - Position is in inches. The field is 144 x 144.
+ *    - (0,0) is one corner of the field. Which corner is still a MEASURE item.
+ *    - Heading 0 means facing along field +Y. Positive turns counter-clockwise.
+ *    - Rotation is therefore NOT the usual math convention. Rotating a field vector
+ *      into the robot frame is [[sin, cos], [-cos, sin]], the transpose of the
+ *      robot-to-field matrix. Getting this backwards still compiles and still makes
+ *      plausible telemetry, so it is worth testing numerically; both directions are
+ *      written out in Drive.
  */
 public final class Pose {
 
