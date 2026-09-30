@@ -10,35 +10,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
-/**
- * Odometry computed from the drive motor encoders plus the onboard IMU.
- *
- * <p>This is the fallback when no Pinpoint is wired up, and it is good enough to tune
- * autonomous on. It is worse than dead reckoning in every respect, so prefer a
- * Pinpoint when you have one: wheel slip under load is invisible to this, and the
- * position error is a random walk that grows all match long.
- *
- * <p>Both the Control Hub and the Expansion Hub expose an IMU in the hardware map
- * under the name {@code imu}, so this costs no extra hardware. Without an IMU there is
- * no way to know the robot's heading from wheel encoders alone, so this class reports
- * itself unavailable rather than quietly returning a heading that never changes.
- *
- * <h2>Why the motors stay in RUN_WITHOUT_ENCODER</h2>
- *
- * <p>Encoder <em>positions</em> are readable in any run mode. Commanding power to a
- * motor that is in {@code RUN_USING_ENCODER} is an error, and mixing the two is the
- * easiest way to end up with drivetrain motors that refuse to move. This class
- * deliberately reads positions and never changes the mode the drivetrain set up.
- *
- * <h2>References</h2>
- *
- *  The fallback used when no Pinpoint is wired up. The hub IMU appears in the
- *  hardware map under the name imu on both the Control Hub and the Expansion Hub:
- *    https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
- *
- *  Yaw is read as firstAngle with AxesOrder.ZYX. Orientation has no
- *  getYaw(AngleUnit) method; firstAngle is a public field.
- */
+// fallback odometry from the drive encoders plus the hub imu, which is in the
+// hardware map as "imu" on either hub, worse than a pinpoint in every way so
+// keep it a backup
+//
+// reads positions and never touches run mode, commanding power to a motor in
+// RUN_USING_ENCODER is an error
+//
+// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 public class EncoderOdometry implements Odometry {
 
     private final DriveMotor[] motors;
@@ -96,15 +75,13 @@ public class EncoderOdometry implements Odometry {
         double backLeft = inchesSinceLast(ticks[2], 2);
         double backRight = inchesSinceLast(ticks[3], 3);
 
-        // Standard mecanum inverse mixing, recovering the body-frame velocities the
-        // four wheel positions imply. Derive these from MecanumDrive's formula rather
-        // than guessing: forward = all four averaged, and the lateral term alternates
-        // sign across the diagonals. Getting this wrong is silent, so the check is
-        // that a pure left strafe comes out as zero forward and negative rightward.
+        // standard mecanum inverse mixing, derive it from the mecanum formula rather
+        // than guessing, forward is all four averaged and the lateral term
+        // alternates sign across the diagonals
         //
-        // This assumes motor directions are configured so that all four wheels report
-        // positive counts when the robot moves forward. If a move is tracked with the
-        // wrong sign, fix the direction in DriveConfig rather than the sign here.
+        // check it by making a pure left strafe come out zero forward and negative
+        // rightward, and make sure all four wheels report positive going forward, a
+        // wrong direction belongs in DriveConfig and not here
         double forward = (frontLeft + frontRight + backLeft + backRight) / 4.0;
         double right = (-frontLeft + frontRight + backLeft - backRight) / 4.0;
 
@@ -113,8 +90,8 @@ public class EncoderOdometry implements Odometry {
         double sin = Math.sin(Math.toRadians(heading));
         double cos = Math.cos(Math.toRadians(heading));
 
-        // Rotate the robot-frame motion into the field frame, using the 0 deg = +Y
-        // heading convention on Pose. At heading 0 this gives dx = -right, dy = forward.
+        // robot frame into field frame, at heading 0 this gives dx = -right and
+        // dy = forward
         double dx = forward * sin - right * cos;
         double dy = forward * cos - right * sin;
 
@@ -132,10 +109,7 @@ public class EncoderOdometry implements Odometry {
         return (currentTicks - lastTicks[motorIndex]) / ticksPerInch;
     }
 
-    /**
-     * Reads the hub IMU. With {@link AxesOrder#ZYX} the first angle is the yaw, which
-     * is the only one this class needs.
-     */
+    // hub imu yaw, ZYX puts yaw first and it is the only angle needed
     private double readHeading() {
         if (imu == null) {
             return 0.0;

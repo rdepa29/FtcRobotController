@@ -8,41 +8,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 
-/**
- * Odometry backed by a goBILDA Pinpoint computer.
- *
- * <p>The only class in the codebase that talks to the Pinpoint driver directly.
- * Every other file goes through {@link Odometry}, so if the driver's API ever moves,
- * this is the single file that needs editing.
- *
- * <h2>Set up order matters</h2>
- *
- * <p>Offsets, encoder resolution, and encoder directions all have to be written before
- * {@link GoBildaPinpointDriver#resetPosAndIMU()}, and the robot has to be stationary
- * while that reset happens. That is why the base OpMode exposes an init loop: it is
- * the only place where you can wait for the driver to finish calibrating without
- * eating into the 30 second autonomous period.
- *
- * <h2>References</h2>
- *
- *    https://www.gobilda.com/content/user_manuals/3110-0002-0001%20User%20Guide.pdf
- *    https://github.com/goBILDA-Official/FtcRobotController-Add-Pinpoint
- *
- *  From the goBILDA User Guide, the offset convention used in DriveConfig:
- *    - The X pod offset is how far sideways the X (forward) pod sits from the
- *      tracking point. LEFT of center is POSITIVE, right of center negative.
- *    - The Y pod offset is how far forward the Y (strafe) pod sits from the tracking
- *      point. FORWARD of center is positive, backward negative.
- *
- *  Also from the guide, and the reason for the ordering in configure():
- *    - setEncoderDirections: the X pod must INCREASE when the robot moves forward,
- *      and the Y pod must INCREASE when the robot moves LEFT.
- *    - recalibrateIMU and resetPosAndIMU both need the robot stationary and take
- *      about 0.25s, which is why they belong in init_loop() and not loop().
- *    - Rotating the robot in place should keep position within about 4 inches. If it
- *      swings further, one of the pod offsets has the wrong sign.
- *    - A closed loop back to the start point should land within about 10mm.
- */
+// the only file that talks to the pinpoint driver directly, offsets and
+// directions all have to be set before resetPosAndIMU and the robot has to be
+// still while it happens, which is why it happens in init_loop
+//
+// podX is positive LEFT of center and podY positive FORWARD, rotating in
+// place should hold within about 4in and if it swings a sign is wrong
+//
+// https://www.gobilda.com/content/user_manuals/3110-0002-0001%20User%20Guide.pdf
 public class PinpointOdometry implements Odometry {
 
     private final GoBildaPinpointDriver pinpoint;
@@ -67,7 +40,7 @@ public class PinpointOdometry implements Odometry {
         }
     }
 
-    /** Writes every setting the driver needs, then zeroes it. Robot must be stationary. */
+    // writes every setting then zeroes, robot has to be still
     private void configure() {
         pinpoint.setOffsets(
                 config.podXOffsetInches,
@@ -78,12 +51,7 @@ public class PinpointOdometry implements Odometry {
         pinpoint.resetPosAndIMU();
     }
 
-    /**
-     * Re-zeroes the position and recalibrates the internal gyro.
-     *
-     * <p>Call from {@code init_loop()} with the robot still. Call it again any time
-     * you know exactly where the robot is, to clear accumulated drift.
-     */
+    // re-zeroes and recalibrates the gyro
     public void recalibrate() {
         if (pinpoint == null) {
             return;
@@ -92,11 +60,8 @@ public class PinpointOdometry implements Odometry {
         pinpoint.resetPosAndIMU();
     }
 
-    /**
-     * True once the driver has finished powering up and calibrating. An OpMode should
-     * not call {@link #resetPose} before this, or the correction gets thrown away by
-     * the calibration that follows.
-     */
+    // true once the driver has powered up and calibrated, do not setPose before
+    // this or the calibration that follows throws the correction away
     public boolean isReady() {
         if (pinpoint == null) {
             return false;
@@ -158,7 +123,7 @@ public class PinpointOdometry implements Odometry {
         return pinpoint != null;
     }
 
-    /** The raw driver, for anything this wrapper does not expose yet. */
+    // raw driver, for anything this wrapper does not expose yet
     public GoBildaPinpointDriver getDriver() {
         return pinpoint;
     }

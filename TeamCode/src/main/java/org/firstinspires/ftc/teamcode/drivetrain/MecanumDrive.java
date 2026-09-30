@@ -5,32 +5,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
-/**
- * Four-wheel mecanum mixing.
- *
- * <p>This is the one place the mixing formula lives. The three cases worth checking
- * against reality before you trust the robot:
- *
- * <pre>
- *   forward only   (0,0,0 -> 1,0,0)  all four motors equal
- *   turn left      (0,0,0 -> 0,0,1)  left motors back, right motors forward
- *   strafe right   (0,0,0 -> 0,1,0)  diagonal pairs opposed
- * </pre>
- *
- * <p>If the third one goes the wrong way, that is not a software bug. Mecanum rollers
- * are laid out in one of two mirror-image arrangements and yours may be the other one;
- * set {@link DriveConfig#mirrorStrafe} rather than editing the formula.
- *
- * <h2>References</h2>
- *
- *    https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
- *    https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
- *
- *  Both cover the roller arrangement this file depends on: viewed from above, the
- *  rollers must form an X pointing at the center of the robot, not a rhombus. Wheels
- *  in the other arrangement still strafe, just to the wrong side, which is what
- *  DriveConfig.mirrorStrafe corrects.
- */
+// the one place the mecanum mixing lives, if strafing is wrong it is usually
+// the roller arrangement so set mirrorStrafe before touching this
+//
+// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class MecanumDrive implements Drivetrain {
 
     private final DriveMotor frontLeft;

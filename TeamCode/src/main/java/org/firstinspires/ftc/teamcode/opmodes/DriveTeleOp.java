@@ -5,22 +5,11 @@ import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
-/**
- * The one TeleOp to start with. It exercises the whole drivetrain and nothing else.
- *
- * <p>Drive sticks: forward/back on the left stick, strafe on the right stick's X,
- * turn on the right stick's Y. Hold the left bumper to switch between robot-relative
- * and field-relative driving, which is the fastest way to convince yourself why
- * field-relative is nicer.
- *
- * <h2>References</h2>
- *
- *  Gamepad input fields and stick conventions:
- *    https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
- *
- *  Note that Gamepad exposes right_stick_x and right_stick_y as flat float fields,
- *  not as a nested right_stick object.
- */
+// the teleop to start with, drives the whole drivetrain and nothing else
+//
+// left bumper toggles robot-relative and field-relative
+//
+// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 @TeleOp(name = "Drive: TeleOp", group = "01 Drive")
 public class DriveTeleOp extends RobotOpMode {
 

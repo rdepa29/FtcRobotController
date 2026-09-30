@@ -5,24 +5,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
-/**
- * Four-wheel differential (tank) mixing.
- *
- * <p>Included because the drivetrain type is exactly the thing that changes most often
- * in a season, and it should be a one-line change in the OpMode rather than a rewrite.
- * Everything above this class, including {@link Drive} and every motion, works
- * unchanged on a differential base.
- *
- * <p>Strafing is not physically available, so {@code roll} is accepted and discarded.
- * A {@link Drive} on a differential base will simply fail to strafe, which is the
- * correct behavior; it will not silently spin.
- *
- * <h2>References</h2>
- *
- *  Included because the drivetrain type is the thing that changes most often in a
- *  season, and it should be a one-line change in the OpMode rather than a rewrite:
- *    https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
- */
+// tank mixing so the chassis can change type without anything above it
+// noticing, strafe is accepted and dropped because a differential base
+// cannot do it
+//
+// https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
 public class DifferentialDrive implements Drivetrain {
 
     private final DriveMotor frontLeft;
@@ -46,7 +33,7 @@ public class DifferentialDrive implements Drivetrain {
 
     @Override
     public void drive(double pitch, double roll, double yaw) {
-        // roll is intentionally unused; see the class comment.
+        // roll is dropped, see class comment
         double left = pitch - yaw;
         double right = pitch + yaw;
 

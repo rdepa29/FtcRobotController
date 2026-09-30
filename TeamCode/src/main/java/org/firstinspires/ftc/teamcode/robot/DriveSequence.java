@@ -4,38 +4,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drivetrain.Drive;
 import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 
-/**
- * A list of "go here" steps that runs itself one step per loop.
- *
- * <p>This is the entire autonomous programming model. A routine is a sequence of
- * targets; the sequence notices when each one is finished and starts the next. There
- * is no step counter in your own code, no flag to reset, and no way to lose your place
- * if a step takes a different amount of time than expected, which it always does.
- *
- * <pre>
- *   sequence()
- *       .add("score low", 24, 24, 0)
- *       .add("grab",       60, 36, 90)
- *       .add("back away",  24, 24, 0);
- *
- *   // in onLoop():
- *   if (sequence().isDone()) { /* do the endgame thing *&#47; }
- *   else { sequence().run(); }
- * </pre>
- *
- * <p>Timing that cannot be expressed as a target, like a 300 ms settle before a
- * shooter, goes in with {@link #addWait}. The clock starts when the wait begins, not
- * when the OpMode starts, so a slow approach does not eat into it.
- *
- * <h2>References</h2>
- *
- *  A list of goTo targets that advances one step at a time. Nothing to configure
- *  beyond the targets; see RobotOpMode for the lifecycle it runs inside:
- *    https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
- */
+// the whole autonomous model, a list of steps that advances one per loop so a
+// step that runs long never loses your place
+//
+// use addWait for anything that is not a target, like a settle before a shooter
+//
+// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class DriveSequence {
 
-    /** A single step. Implementations only ever get called from the robot's thread. */
+    // one step, only ever called from the robot's thread
     public interface Step {
         void begin(Drive drive);
     }
@@ -93,40 +70,30 @@ public class DriveSequence {
     private Wait activeWait;
     private Drive drive;
 
-    /**
-     * Hands the sequence the drivetrain it will drive. Must be called before
-     * {@link #run()}. {@link RobotOpMode#sequence()} does this for you.
-     */
+    // hands it the drivetrain, must be called before run, sequence does this
+    // for you
     public void attach(Drive drive) {
         this.drive = drive;
     }
 
-    /**
-     * Appends a "drive to this point and face this way" step.
-     *
-     * @param name shows up in telemetry while this step runs
-     */
+    // appends a drive to this point facing this way
     public DriveSequence add(String name, double x, double y, double headingDegrees) {
         return add(new Target(new Pose(x, y, headingDegrees)), name);
     }
 
-    /** Appends a step that drives to a {@link Pose}. */
+    // appends a drive to a pose
     public DriveSequence add(String name, Pose pose) {
         return add(new Target(pose), name);
     }
 
-    /**
-     * Appends a relative turn. Positive degrees turn left, negative turn right, from
-     * whatever heading the robot has when the step actually begins.
-     */
+    // appends a relative turn, positive is left, from whatever heading the robot
+    // has when the step actually begins
     public DriveSequence addTurn(String name, double degrees) {
         return add(new Turn(degrees), name);
     }
 
-    /**
-     * Appends a step that does nothing for a fixed number of seconds. Wheels stopped.
-     * Use for settling delays that a feedback loop cannot express.
-     */
+    // appends a fixed wait with the wheels stopped, for settling a feedback loop
+    // cannot express
     public DriveSequence addWait(String name, double seconds) {
         return add(new Wait(seconds), name);
     }
@@ -142,15 +109,7 @@ public class DriveSequence {
         return this;
     }
 
-    /**
-     * Advances the sequence by at most one step. Call once per loop.
-     *
-     * <p>Does nothing once the sequence is done, so a routine that has already finished
-     * cannot drive the robot anywhere. That is the safety property that makes it safe
-     * to leave this call in a loop that also does other things.
-     */
-    public void run() {
-        if (isDone() || drive == null) {
+    // advances the sequence by at most one step, once per loop
             return;
         }
         if (index < 0) {
@@ -180,12 +139,12 @@ public class DriveSequence {
         steps[i].begin(drive);
     }
 
-    /** True when every step has finished. Safe to poll forever. */
+    // true once every step is finished, safe to poll forever
     public boolean isDone() {
         return index < 0;
     }
 
-    /** Name of the step currently running, or the last one run. */
+    // name of the step currently running, or the last one run
     public String getCurrentStep() {
         if (index < 0 || index >= count) {
             return count == 0 ? "empty" : "done";
@@ -193,7 +152,7 @@ public class DriveSequence {
         return names[index];
     }
 
-    /** Fraction complete, 0 to 1. Useful for a progress bar on the DS. */
+    // 0 to 1, useful for a progress bar on the DS
     public double getProgress() {
         if (count == 0) {
             return 1.0;
@@ -201,15 +160,12 @@ public class DriveSequence {
         return Math.max(0.0, Math.min(1.0, (double) index / count));
     }
 
-    /** Total number of steps. */
+    // total number of steps
     public int size() {
         return count;
     }
 
-    /**
-     * Starts the sequence over from the first step. The robot does not move back to
-     * the start of the routine; only the step list resets.
-     */
+    // resets the step list only, the robot stays where it is
     public void reset() {
         index = -1;
         activeWait = null;

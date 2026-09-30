@@ -1,21 +1,8 @@
 package org.firstinspires.ftc.teamcode.util;
 
-/**
- * A single PIDF controller, used for anything that needs to settle on a value:
- * driving to a heading, driving to a coordinate, holding a flywheel speed.
- *
- * <p>Written in FTC-native units (inches, degrees, inches/second, degrees/second)
- * so gains can be reasoned about directly. A gain is roughly
- * "output per unit of error at the start of a move".
- *
- * <p>Pure math: no hardware, no time source. {@link #update(double error, double dt)}
- * takes the elapsed time as a parameter, which is what makes it testable.
- *
- * <h2>References</h2>
- *
- *  A textbook PIDF controller. Nothing in the codebase uses this yet; it exists
- *  for the mechanisms (lifters, flywheels, feeders) that arrive with the hardware.
- */
+// textbook pidf in FTC-native units so gains can be reasoned about directly
+//
+// nothing calls this yet, it is here for the lifters and flywheels
 public class Pidf {
 
     private final double kP;
@@ -27,7 +14,7 @@ public class Pidf {
     private double lastError = 0.0;
     private boolean hasLastError = false;
 
-    /** Velocity in output units per second that {@code kF} multiplies. Set 0 if unused. */
+    // output units per second that kF multiplies, set 0 if unused
     private final double feedForwardVelocity;
 
     public Pidf(double kP, double kI, double kD, double kF) {
@@ -42,24 +29,20 @@ public class Pidf {
         this.feedForwardVelocity = feedForwardVelocity;
     }
 
-    /** Clears integral windup and derivative history. Call this at the start of every move. */
+    // clears integral windup and derivative history, call at the start of every
+    // move
     public void reset() {
         integral = 0.0;
         lastError = 0.0;
         hasLastError = false;
     }
 
-    /**
-     * Computes the command for the current error.
-     *
-     * @param error how far the current value is from the target, already signed
-     * @param dt    seconds since the previous update
-     */
+    // computes the command for the current error
     public double update(double error, double dt) {
         double output = kP * error + kF * feedForwardVelocity;
 
-        // Integrate only when the dt is sane, so a paused OpMode or a dropped frame
-        // does not dump a huge chunk of integral into the next update.
+        // integrate only when dt is sane, so a paused opmode or a dropped frame does
+        // not dump a huge integral into the next update
         if (dt > 0.0 && dt < 0.5) {
             integral += error * dt;
             output += kI * integral;
@@ -74,17 +57,12 @@ public class Pidf {
         return output;
     }
 
-    /**
-     * Stops accumulating integral once the controller is close to the target.
-     *
-     * <p>Without this, a move that overshoots and comes back keeps unwinding a large
-     * integral and oscillates instead of settling.
-     */
+    // stops accumulating integral once close to the target
     public double updateWithIntegralCutoff(double error, double dt, double integralCutoffDistance) {
         if (Math.abs(error) > integralCutoffDistance) {
             return update(error, dt);
         }
-        // Freeze the integral but still run P and D.
+        // freeze the integral but still run p and d
         double frozenIntegral = integral;
         double result = update(error, dt);
         integral = frozenIntegral;

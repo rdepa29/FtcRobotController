@@ -12,37 +12,15 @@ import org.firstinspires.ftc.teamcode.drivetrain.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointOdometry;
 import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 
-/**
- * The robot, assembled on demand.
- *
- * <p>Everything here is created the first time an OpMode asks for it, and never
- * before. That is the whole point: an OpMode that only wants to do a thing with the
- * drivetrain never touches the intake, and an OpMode that never asks for odometry
- * never spins up a Pinpoint. Nothing here can fail to initialize because of a module
- * another OpMode happened to reference.
- *
- * <pre>
- *   Drive drive = robot.drive();
- *   drive.goTo(72, 72, 90);
- * </pre>
- *
- * <h2>Why there is no dependency injection</h2>
- *
- * <p>Every FTC team shares one APK, so a module graph has to be built at runtime
- * anyway. A constructor taking a {@code Robot} is enough, and it keeps the call sites
- * looking like ordinary code instead of a framework. When a second mechanism shows up
- * and they need to talk to each other, this is the class that grows.
- *
- * <h2>References</h2>
- *
- *  Module assembly. Every team ships one APK, so all of these classes load together,
- *  and the lazy lookups here are what keep an OpMode from initializing hardware it
- *  never asked for:
- *    https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
- */
+// builds each module the first time an opmode asks for it, so one that only
+// wants the drivetrain never spins up the intake
+//
+// one apk per team means the graph gets built at runtime anyway
+//
+// https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
 public class Robot {
 
-    /** Which mixing to build. Change this one line when the drivetrain changes. */
+    // which mixing to build, change this one line when the drivetrain changes
     public enum Chassis {
         MECANUM,
         DIFFERENTIAL
@@ -65,11 +43,7 @@ public class Robot {
         this.chassis = chassis;
     }
 
-    // ------------------------------------------------------------------
-    // Lazy modules
-    // ------------------------------------------------------------------
-
-    /** The drivetrain's motor mixing. Built on first use. */
+    // lazy modules
     public Drivetrain drivetrain() {
         if (drivetrain == null) {
             drivetrain = chassis == Chassis.DIFFERENTIAL
@@ -84,18 +58,7 @@ public class Robot {
         return drivetrain;
     }
 
-    /**
-     * Where the robot thinks it is. Built on first use.
-     *
-     * <p>Prefers a Pinpoint and silently falls back to encoders if there is not one.
-     * The fallback is a real fallback, not a stub: a robot with no Pinpoint wired up
-     * still gets usable, if less accurate, odometry from its wheel encoders and the
-     * hub IMU. That is deliberate, because the drivetrain is still being decided and
-     * autonomous should be testable before the odometry computer is soldered in.
-     */
-    public Odometry odometry() {
-        if (odometry == null) {
-            if (config.usePinpoint) {
+    // where the robot thinks it is, built on first use
                 PinpointOdometry pinpoint = new PinpointOdometry(hardwareMap, config);
                 if (pinpoint.isAvailable()) {
                     odometry = pinpoint;
@@ -108,7 +71,7 @@ public class Robot {
         return odometry;
     }
 
-    /** The high-level drivetrain. Built on first use, pulls in both of the above. */
+    // the high level drivetrain, built on first use, pulls in both of the above
     public Drive drive() {
         if (drive == null) {
             drive = new Drive(drivetrain(), odometry(), config);
@@ -116,36 +79,8 @@ public class Robot {
         return drive;
     }
 
-    // ------------------------------------------------------------------
-    // Lifecycle
-    // ------------------------------------------------------------------
-
-    /**
-     * Declares where the robot is starting, in field coordinates.
-     *
-     * <p>Call this from {@code init()}. It is applied automatically, and only at the
-     * right moment, by {@link #startUp()}. Do not apply it yourself: a Pinpoint that
-     * is still calibrating will discard any position set before it finishes, and the
-     * symptom is an autonomous that starts from (0, 0) no matter what you told it.
-     */
-    public void setStartPose(double xInches, double yInches, double headingDegrees) {
-        this.startPose = new Pose(xInches, yInches, headingDegrees);
-    }
-
-    /**
-     * Called once per loop from {@code init_loop()} while the robot is still held.
-     *
-     * <p>This is the only safe place to wait on a Pinpoint's calibration. An OpMode
-     * needs a corrected starting position calls {@link #setStartPose} in {@code init()},
-     * and this takes care of the rest.
-     */
-    public void startUp() {
-        Odometry current = odometry();
-        if (current instanceof PinpointOdometry) {
-            PinpointOdometry pinpoint = (PinpointOdometry) current;
-            if (pinpoint.isReady()) {
-                // Recalibrate first, then apply the start pose. The other order
-                // throws the pose away.
+    // lifecycle
+                // recalibrate first, the other order throws the pose away
                 pinpoint.recalibrate();
                 if (startPose != null) {
                     pinpoint.setPose(startPose);
@@ -153,14 +88,14 @@ public class Robot {
             }
             return;
         }
-        // The encoder fallback has nothing to calibrate, so apply it once and be done.
+        // the encoder fallback has nothing to calibrate, so apply it once and be done
         if (startPose != null) {
             current.setPose(startPose);
             startPose = null;
         }
     }
 
-    /** Called at the end of every OpMode. Stops the motors unconditionally. */
+    // called at the end of every opmode, stops the motors unconditionally
     public void shutDown() {
         if (drive != null) {
             drive.stop();
