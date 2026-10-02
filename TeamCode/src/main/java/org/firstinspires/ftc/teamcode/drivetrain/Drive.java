@@ -4,13 +4,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
-// setPower and driveField drive by hand, goTo and turnTo send the robot
-// somewhere and return immediately, setPower throws the target away and hands
-// the wheels back
-//
-// field is 144x144in, heading 0 faces +Y, positive is CCW, full api in readme.md
-//
-// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
+// manual or non-blocking goTo, field is 144x144in
+// heading 0 faces +Y, positive is CCW, api in readme.md
 public class Drive {
 
     private final Drivetrain drivetrain;
@@ -30,16 +25,20 @@ public class Drive {
         this.config = config;
     }
 
-    // direct control
+    /// direct control
+    // -1 to 1, forward, strafe left, turn CCW, cancels any goTo
+    public void setPower(double forward, double strafe, double turn) {
+        cancel();
+        drivetrain.drive(forward, strafe, turn);
+    }
+
+    // same as setPower but field-relative, stick forward always means field +Y
     public void driveField(double forward, double strafe, double turn) {
         double heading = Math.toRadians(odometry.getPose().getHeading());
         double sin = Math.sin(heading);
         double cos = Math.cos(heading);
-        // field frame to robot frame, this is the inverse of the rotation in update()
-        // and the two are not the same expression, which is the easy thing to get wrong
-        //
-        // check it at heading 0, a field +Y command has to come out pure forward and
-        // field +X pure strafe right
+        // field frame to robot frame, inverse of the rotation in update()
+        // check at heading 0, field +Y pure forward, +X pure strafe right
         setPower(
                 forward * sin + strafe * cos,
                 -forward * cos + strafe * sin,
@@ -52,16 +51,60 @@ public class Drive {
         drivetrain.stop();
     }
 
-    // go there
+    /// go there
+    // drives to a point and keeps the heading it arrives with
+    public void goTo(double xInches, double yInches) {
+        this.target = new Pose(xInches, yInches, odometry.getPose().getHeading());
+        this.requireHeading = false;
     }
 
-    // drives to a point and ends up facing a heading
+    // drives to a point facing a heading, non-blocking
+    // inside positionToleranceInches already counts as there
+    public void goTo(double xInches, double yInches, double headingDegrees) {
+        this.target = new Pose(xInches, yInches, MathUtils.wrapDegrees(headingDegrees));
+        this.requireHeading = true;
+    }
+
+    // drives to a pose, using its heading
+    public void goTo(Pose pose) {
+        goTo(pose.getX(), pose.getY(), pose.getHeading());
+    }
+
+    // turns in place to a heading, holds with a goTo to the current spot
+    // not for short moves
+    public void turnTo(double headingDegrees) {
+        Pose pose = odometry.getPose();
+        goTo(pose.getX(), pose.getY(), headingDegrees);
+    }
+
+    // turns by a number of degrees, positive is left
+    public void turnBy(double degrees) {
+        turnTo(odometry.getPose().getHeading() + degrees);
+    }
+
+    /// state
+    // refreshes odometry and steers at the target, once per loop
+    public void update() {
+        odometry.update();
+        if (target == null) {
+            return;
+        }
+
+        Pose pose = odometry.getPose();
+        xError = target.getX() - pose.getX();
+        yError = target.getY() - pose.getY();
+        headingError = MathUtils.headingError(pose.getHeading(), target.getHeading());
+
+        // rotate the field error into the robot frame so zero error is always
+        // zero power
+        double heading = Math.toRadians(pose.getHeading());
+        double sin = Math.sin(heading);
+        double cos = Math.cos(heading);
         double forward = (xError * sin + yError * cos) * config.translationalGain;
         double strafe = (-xError * cos + yError * sin) * config.translationalGain;
 
-        // heading gets a d term because a spinning robot overshoots badly and the
-        // imu measures that well, position stays p only because wheel velocity is a
-        // poor frame-ambiguous signal
+        // heading gets a d term, spinning overshoots and the imu sees it
+        // position stays p, wheel velocity is a poor signal
         double turn = requireHeading
                 ? headingError * config.headingGain
                         - odometry.getYawVelocity() * config.headingGainDamp
@@ -103,7 +146,8 @@ public class Drive {
         headingError = 0.0;
     }
 
-    // reading the robot
+    /// reading the robot
+    // current pose in inches and degrees
     public Pose getPose() {
         return odometry.getPose();
     }
@@ -118,7 +162,9 @@ public class Drive {
         odometry.setPose(pose);
     }
 
-    // zeroes the encoders and puts the pose back at (0,0)
+    // zeroes the encoders and puts the pose back at (0,0), teleop only and
+    // never during a match because it throws away the position odometry earned
+    public void resetEncodersAndPose() {
         drivetrain.resetEncoders();
         odometry.setPose(new Pose(0, 0, 0));
     }

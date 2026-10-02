@@ -5,10 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
-// tank mixing so the chassis can change type without anything above it
-// noticing, strafe is accepted and dropped because a differential base
-// cannot do it
-//
+// tank mixing, strafe dropped because a differential base cannot do it
 // https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
 public class DifferentialDrive implements Drivetrain {
 

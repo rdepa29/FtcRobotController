@@ -2,13 +2,8 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-// three driver axes in, motor powers out, nothing else, no field, no
-// odometry and no opinion where the robot is going, which is what lets
-// mecanum swap for differential without touching an opmode
-//
-// pitch forward, roll right, yaw CCW
-//
-// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
+// three driver axes in, motor powers out, nothing else
+// pitch forward roll right yaw CCW, mecanum and differential both fit
 public interface Drivetrain {
 
     // robot-relative, normalized internally so (1,1,1) is legal

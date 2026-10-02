@@ -4,11 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.drivetrain.Drive;
 
-// base class for every opmode, loop and stop are final so the odometry update
-// and the motor stop always run in the right order no matter what the opmode
-// body does
-//
-// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+// base class for every opmode, loop and stop are final
+// so the odometry update and motor stop always run in order
 public abstract class RobotOpMode extends OpMode {
 
     protected Robot robot;
@@ -43,7 +40,8 @@ public abstract class RobotOpMode extends OpMode {
         onStop();
     }
 
-    // hooks
+    /// hooks
+    // one time setup, do not touch the motors, they are not held yet
     protected abstract void onInit();
 
     // runs until the driver presses play, this is where calibration waits
@@ -57,19 +55,20 @@ public abstract class RobotOpMode extends OpMode {
     protected void onStop() {
     }
 
-    // helpers
+    /// helpers
+    // shorthand for robot.drive
     protected Drive drive() {
         return robot.drive();
     }
 
-    // start pose, call once from onInit, applied automatically at the right moment
-    // by the base class
+    // start pose, call once from onInit, applied automatically at the right
+    // moment
     protected void setStartPose(double xInches, double yInches, double headingDegrees) {
         robot.setStartPose(xInches, yInches, headingDegrees);
     }
 
-    // the autonomous step list, call it in onInit to build the routine, then run
-    // it every loop in onLoop and check isDone
+    // the autonomous step list, build it in onInit then run it every loop in
+    // onLoop
     protected DriveSequence sequence() {
         sequence.attach(robot.drive());
         return sequence;
@@ -80,8 +79,8 @@ public abstract class RobotOpMode extends OpMode {
         robot.addTelemetry(telemetry);
     }
 
-    // wait until the robot arrives, returns immediately so keep calling it every
-    // loop
+    // wait until the robot arrives, returns immediately so keep calling it
+    // every loop
     protected boolean isBusy() {
         return robot.drive().isBusy();
     }

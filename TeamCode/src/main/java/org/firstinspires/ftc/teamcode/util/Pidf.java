@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
 // textbook pidf in FTC-native units so gains can be reasoned about directly
-//
 // nothing calls this yet, it is here for the lifters and flywheels
 public class Pidf {
 
@@ -14,7 +13,7 @@ public class Pidf {
     private double lastError = 0.0;
     private boolean hasLastError = false;
 
-    // output units per second that kF multiplies, set 0 if unused
+    // output units per second that kF multiplies, 0 if unused
     private final double feedForwardVelocity;
 
     public Pidf(double kP, double kI, double kD, double kF) {
@@ -37,12 +36,13 @@ public class Pidf {
         hasLastError = false;
     }
 
-    // computes the command for the current error
+    // computes the command for the current error, error is already signed
+    // dt is seconds since the previous update
     public double update(double error, double dt) {
         double output = kP * error + kF * feedForwardVelocity;
 
-        // integrate only when dt is sane, so a paused opmode or a dropped frame does
-        // not dump a huge integral into the next update
+        // integrate only when dt is sane, so a paused opmode or a dropped frame
+        // does not dump a huge integral into the next update
         if (dt > 0.0 && dt < 0.5) {
             integral += error * dt;
             output += kI * integral;
@@ -58,6 +58,7 @@ public class Pidf {
     }
 
     // stops accumulating integral once close to the target
+    // without this an overshoot keeps unwinding a large integral and oscillates
     public double updateWithIntegralCutoff(double error, double dt, double integralCutoffDistance) {
         if (Math.abs(error) > integralCutoffDistance) {
             return update(error, dt);

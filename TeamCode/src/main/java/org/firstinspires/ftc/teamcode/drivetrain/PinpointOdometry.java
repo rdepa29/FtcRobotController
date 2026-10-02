@@ -8,14 +8,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 
-// the only file that talks to the pinpoint driver directly, offsets and
-// directions all have to be set before resetPosAndIMU and the robot has to be
-// still while it happens, which is why it happens in init_loop
-//
-// podX is positive LEFT of center and podY positive FORWARD, rotating in
-// place should hold within about 4in and if it swings a sign is wrong
-//
-// https://www.gobilda.com/content/user_manuals/3110-0002-0001%20User%20Guide.pdf
+// the only file that talks to the pinpoint driver directly
+// set offsets and directions before resetPosAndIMU, with the robot still
+// podX positive LEFT of center, podY positive FORWARD
+// rotating in place holds within about 4in, a sign that swings is wrong
 public class PinpointOdometry implements Odometry {
 
     private final GoBildaPinpointDriver pinpoint;
@@ -52,6 +48,8 @@ public class PinpointOdometry implements Odometry {
     }
 
     // re-zeroes and recalibrates the gyro
+    // call from init_loop with the robot still
+    // and again whenever you know exactly where it is
     public void recalibrate() {
         if (pinpoint == null) {
             return;

@@ -12,12 +12,8 @@ import org.firstinspires.ftc.teamcode.drivetrain.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointOdometry;
 import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 
-// builds each module the first time an opmode asks for it, so one that only
-// wants the drivetrain never spins up the intake
-//
-// one apk per team means the graph gets built at runtime anyway
-//
-// https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
+// builds each module the first time an opmode asks for it
+// one that only wants the drivetrain never spins up the intake
 public class Robot {
 
     // which mixing to build, change this one line when the drivetrain changes
@@ -43,7 +39,8 @@ public class Robot {
         this.chassis = chassis;
     }
 
-    // lazy modules
+    /// lazy modules
+    // the drivetrain's motor mixing, built on first use
     public Drivetrain drivetrain() {
         if (drivetrain == null) {
             drivetrain = chassis == Chassis.DIFFERENTIAL
@@ -59,6 +56,10 @@ public class Robot {
     }
 
     // where the robot thinks it is, built on first use
+    // prefers a pinpoint, falls back to encoders, and the fallback really works
+    public Odometry odometry() {
+        if (odometry == null) {
+            if (config.usePinpoint) {
                 PinpointOdometry pinpoint = new PinpointOdometry(hardwareMap, config);
                 if (pinpoint.isAvailable()) {
                     odometry = pinpoint;
@@ -71,7 +72,7 @@ public class Robot {
         return odometry;
     }
 
-    // the high level drivetrain, built on first use, pulls in both of the above
+    // the high level drivetrain, pulls in both of the above
     public Drive drive() {
         if (drive == null) {
             drive = new Drive(drivetrain(), odometry(), config);
@@ -79,7 +80,20 @@ public class Robot {
         return drive;
     }
 
-    // lifecycle
+    /// lifecycle
+    // declares where the robot starts, in field coordinates
+    // call from init(), startUp applies it, a calibrating pinpoint discards it
+    public void setStartPose(double xInches, double yInches, double headingDegrees) {
+        this.startPose = new Pose(xInches, yInches, headingDegrees);
+    }
+
+    // called once per loop from init_loop while the robot is still held
+    // the only safe place to wait on pinpoint calibration
+    public void startUp() {
+        Odometry current = odometry();
+        if (current instanceof PinpointOdometry) {
+            PinpointOdometry pinpoint = (PinpointOdometry) current;
+            if (pinpoint.isReady()) {
                 // recalibrate first, the other order throws the pose away
                 pinpoint.recalibrate();
                 if (startPose != null) {
@@ -88,7 +102,8 @@ public class Robot {
             }
             return;
         }
-        // the encoder fallback has nothing to calibrate, so apply it once and be done
+        // the encoder fallback has nothing to calibrate, so apply it once and
+        // be done
         if (startPose != null) {
             current.setPose(startPose);
             startPose = null;

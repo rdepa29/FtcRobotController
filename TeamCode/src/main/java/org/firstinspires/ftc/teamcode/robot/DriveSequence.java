@@ -4,12 +4,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drivetrain.Drive;
 import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 
-// the whole autonomous model, a list of steps that advances one per loop so a
-// step that runs long never loses your place
-//
-// use addWait for anything that is not a target, like a settle before a shooter
-//
-// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
+// the autonomous model, a step list advancing one per loop
+// a long step never loses your place, addWait settles what a loop cannot
 public class DriveSequence {
 
     // one step, only ever called from the robot's thread
@@ -77,6 +73,7 @@ public class DriveSequence {
     }
 
     // appends a drive to this point facing this way
+    // name: shows up in telemetry while this step runs
     public DriveSequence add(String name, double x, double y, double headingDegrees) {
         return add(new Target(new Pose(x, y, headingDegrees)), name);
     }
@@ -86,14 +83,13 @@ public class DriveSequence {
         return add(new Target(pose), name);
     }
 
-    // appends a relative turn, positive is left, from whatever heading the robot
-    // has when the step actually begins
+    // appends a relative turn, positive is left, from whatever heading the
+    // robot has when the step actually begins
     public DriveSequence addTurn(String name, double degrees) {
         return add(new Turn(degrees), name);
     }
 
-    // appends a fixed wait with the wheels stopped, for settling a feedback loop
-    // cannot express
+    // appends a fixed wait with the wheels stopped
     public DriveSequence addWait(String name, double seconds) {
         return add(new Wait(seconds), name);
     }
@@ -109,7 +105,10 @@ public class DriveSequence {
         return this;
     }
 
-    // advances the sequence by at most one step, once per loop
+    // advances at most one step, once per loop
+    // does nothing once the sequence is done
+    public void run() {
+        if (isDone() || drive == null) {
             return;
         }
         if (index < 0) {

@@ -2,22 +2,20 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-// where the robot thinks it is, separate from Drivetrain so it can be swapped
-// without touching the mixing
-//
-// first shipped the biobuzz apriltag clusters with every field position at
-// {0,0,0}, so robotPose will not hand you an absolute position
-//
-// https://ftc-resources.firstinspires.org/ftc/game/manual
+// where the robot thinks it is, separate from Drivetrain so it swaps cleanly
+// first shipped the biobuzz tags with every field position at {0,0,0}
 public interface Odometry {
 
-    // reads new sensor data, once per loop before anything reads getPose
+    // reads new sensor data, once per loop before getPose
     void update();
 
     // current pose in inches and degrees
     Pose getPose();
 
     // inches per second along field +X
+    // encoders report robot frame, so treat this as feedforward, never loop on it
+    double getXVelocity();
+
     // same along field +Y
     double getYVelocity();
 

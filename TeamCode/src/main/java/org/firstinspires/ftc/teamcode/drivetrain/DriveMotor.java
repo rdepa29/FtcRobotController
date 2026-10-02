@@ -5,11 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
-// one drive motor, a missing motor is a no-op instead of a crash
-//
-// a DcMotorEx has no setPosition, STOP_AND_RESET_ENCODER is the only way to zero
-//
-// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+// one drive motor, a missing motor is a no-op not a crash
+// a DcMotorEx has no setPosition, only STOP_AND_RESET_ENCODER zeroes it
 public class DriveMotor {
 
     private final String name;
@@ -20,8 +17,8 @@ public class DriveMotor {
         this.motor = motor;
     }
 
-    // looks up a motor and applies its direction and zero power, absent instead
-    // of throwing if the name is not configured
+    // looks up a motor and applies direction and zero power
+    // returns an absent motor instead of throwing if the name is not configured
     public static DriveMotor create(
             HardwareMap hardwareMap, String name, DcMotor.Direction direction, ZeroPowerBehavior zero) {
         DcMotorEx motor = null;
@@ -77,7 +74,10 @@ public class DriveMotor {
         }
     }
 
-    // zeroes the encoder and restores the run mode
+    // zeroes the encoder, STOP_AND_RESET_ENCODER stops the motor
+    // put the old run mode back
+    public void resetEncoder() {
+        if (motor == null) {
             return;
         }
         DcMotor.RunMode previous = motor.getMode();

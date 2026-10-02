@@ -5,10 +5,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
-// a position in inches and degrees so a call site cannot argue about units
-// the way it can with Pose2D, heading 0 faces field +Y and positive is CCW
-//
-// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+// a position in inches and degrees, units you cannot argue about
+// heading 0 faces field +Y and positive is CCW
 public final class Pose {
 
     public static final DistanceUnit DISTANCE_UNIT = DistanceUnit.INCH;

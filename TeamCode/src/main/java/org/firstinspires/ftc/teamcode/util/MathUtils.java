@@ -31,8 +31,8 @@ public final class MathUtils {
         return value < 0 ? -1.0 : 0.0;
     }
 
-    // wraps into [-180,180), use this instead of % tricks which stay wrong on
-    // negative input and are why a robot turns the wrong way
+    // wraps into [-180,180)
+    // use this instead of % tricks, which stay wrong on negative input
     public static double wrapDegrees(double degrees) {
         double wrapped = degrees % 360.0;
         if (wrapped >= 180.0) {
@@ -45,10 +45,16 @@ public final class MathUtils {
     }
 
     // shortest signed rotation from current to target, always in (-180,180]
+    // the one for every turn-toward decision
+    // it never spins the long way for 2 degrees
+    public static double headingError(double current, double target) {
         return wrapDegrees(target - current);
     }
 
     // scales powers down so the largest is at most max, ratios untouched
+    // keeps a diagonal from commanding 1.4, values over 1.0 are allowed on purpose
+    public static void normalize(double[] powers, double max) {
+        double largest = 0.0;
         for (double power : powers) {
             double magnitude = Math.abs(power);
             if (magnitude > largest) {
@@ -64,13 +70,12 @@ public final class MathUtils {
         }
     }
 
-    // true when a and b are within tolerance of each other
+    // true when a and b are within tolerance
     public static boolean nearlyEqual(double a, double b, double tolerance) {
         return Math.abs(a - b) <= tolerance;
     }
 
-    // dead zone with a rescale so the output still reaches a full 1, without the
-    // rescale the robot stays permanently slightly slow
+    // dead zone with a rescale so the output still reaches a full 1
     public static double applyDeadZone(double value, double deadZone) {
         double magnitude = Math.abs(value);
         if (magnitude <= deadZone) {

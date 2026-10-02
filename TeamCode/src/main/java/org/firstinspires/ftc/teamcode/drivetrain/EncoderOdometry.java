@@ -10,14 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
-// fallback odometry from the drive encoders plus the hub imu, which is in the
-// hardware map as "imu" on either hub, worse than a pinpoint in every way so
-// keep it a backup
-//
-// reads positions and never touches run mode, commanding power to a motor in
-// RUN_USING_ENCODER is an error
-//
-// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
+// fallback odometry from the drive encoders plus the hub imu named "imu"
+// reads positions only, commanding power in RUN_USING_ENCODER is an error
 public class EncoderOdometry implements Odometry {
 
     private final DriveMotor[] motors;
@@ -75,13 +69,8 @@ public class EncoderOdometry implements Odometry {
         double backLeft = inchesSinceLast(ticks[2], 2);
         double backRight = inchesSinceLast(ticks[3], 3);
 
-        // standard mecanum inverse mixing, derive it from the mecanum formula rather
-        // than guessing, forward is all four averaged and the lateral term
-        // alternates sign across the diagonals
-        //
-        // check it by making a pure left strafe come out zero forward and negative
-        // rightward, and make sure all four wheels report positive going forward, a
-        // wrong direction belongs in DriveConfig and not here
+        // standard mecanum inverse mixing, forward is all four averaged
+        // lateral alternates sign across the diagonals, a wrong sign is DriveConfig
         double forward = (frontLeft + frontRight + backLeft + backRight) / 4.0;
         double right = (-frontLeft + frontRight + backLeft - backRight) / 4.0;
 

@@ -6,10 +6,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // the teleop to start with, drives the whole drivetrain and nothing else
-//
 // left bumper toggles robot-relative and field-relative
-//
-// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 @TeleOp(name = "Drive: TeleOp", group = "01 Drive")
 public class DriveTeleOp extends RobotOpMode {
 
