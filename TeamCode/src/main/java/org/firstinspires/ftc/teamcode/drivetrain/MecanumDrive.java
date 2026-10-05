@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // the one place the mecanum mixing lives
 // wrong strafing is usually the roller arrangement, set mirrorStrafe first
+// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class MecanumDrive implements Drivetrain {
 
     private final DriveMotor frontLeft;

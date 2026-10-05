@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // fallback odometry from the drive encoders plus the hub imu named "imu"
 // reads positions only, commanding power in RUN_USING_ENCODER is an error
+// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 public class EncoderOdometry implements Odometry {
 
     private final DriveMotor[] motors;
@@ -79,8 +80,8 @@ public class EncoderOdometry implements Odometry {
         double sin = Math.sin(Math.toRadians(heading));
         double cos = Math.cos(Math.toRadians(heading));
 
-        // robot frame into field frame, at heading 0 this gives dx = -right and
-        // dy = forward
+        // robot frame into field frame
+        // at heading 0 this gives dx = -right and dy = forward
         double dx = forward * sin - right * cos;
         double dy = forward * cos - right * sin;
 

@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 
 // the autonomous model, a step list advancing one per loop
 // a long step never loses your place, addWait settles what a loop cannot
+// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class DriveSequence {
 
     // one step, only ever called from the robot's thread
@@ -66,14 +67,14 @@ public class DriveSequence {
     private Wait activeWait;
     private Drive drive;
 
-    // hands it the drivetrain, must be called before run, sequence does this
-    // for you
+    // hands it the drivetrain, must be called before run
+    // the sequence does this for you
     public void attach(Drive drive) {
         this.drive = drive;
     }
 
     // appends a drive to this point facing this way
-    // name: shows up in telemetry while this step runs
+    // name, shows up in telemetry while this step runs
     public DriveSequence add(String name, double x, double y, double headingDegrees) {
         return add(new Target(new Pose(x, y, headingDegrees)), name);
     }
@@ -83,8 +84,8 @@ public class DriveSequence {
         return add(new Target(pose), name);
     }
 
-    // appends a relative turn, positive is left, from whatever heading the
-    // robot has when the step actually begins
+    // appends a relative turn, positive is left
+    // from whatever heading the robot has when the step begins
     public DriveSequence addTurn(String name, double degrees) {
         return add(new Turn(degrees), name);
     }

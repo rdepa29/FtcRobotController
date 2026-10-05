@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
 
 // not a scoring path, it exists to prove the loop is closed
-// if these four targets land repeatably and the pose looks sane
-// the drivetrain and odometry work
+// if these four targets land repeatably and the pose looks sane, the drivetrain and odometry work
+// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 @Autonomous(name = "Drive: Example Auto", group = "01 Drive")
 public class ExampleAuto extends RobotOpMode {
 

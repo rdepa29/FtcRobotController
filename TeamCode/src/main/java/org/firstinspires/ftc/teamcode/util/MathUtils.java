@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
-// angle wrapping, clamping, normalization and dead zones, no SDK types so this
-// is the one file here that unit tests on a plain jvm
+// angle wrapping, clamping, normalization and dead zones
+// no SDK types, so this is the one file that unit tests on a plain jvm
 public final class MathUtils {
 
     private MathUtils() {
@@ -45,8 +45,7 @@ public final class MathUtils {
     }
 
     // shortest signed rotation from current to target, always in (-180,180]
-    // the one for every turn-toward decision
-    // it never spins the long way for 2 degrees
+    // the one for every turn-toward decision, never spins the long way for 2 degrees
     public static double headingError(double current, double target) {
         return wrapDegrees(target - current);
     }

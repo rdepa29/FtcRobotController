@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 
 // builds each module the first time an opmode asks for it
 // one that only wants the drivetrain never spins up the intake
+// https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
 public class Robot {
 
     // which mixing to build, change this one line when the drivetrain changes
@@ -102,8 +103,8 @@ public class Robot {
             }
             return;
         }
-        // the encoder fallback has nothing to calibrate, so apply it once and
-        // be done
+        // the encoder fallback has nothing to calibrate
+        // apply it once and be done
         if (startPose != null) {
             current.setPose(startPose);
             startPose = null;

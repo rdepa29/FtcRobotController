@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // manual or non-blocking goTo, field is 144x144in
 // heading 0 faces +Y, positive is CCW, api in readme.md
+// https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class Drive {
 
     private final Drivetrain drivetrain;
@@ -95,8 +96,8 @@ public class Drive {
         yError = target.getY() - pose.getY();
         headingError = MathUtils.headingError(pose.getHeading(), target.getHeading());
 
-        // rotate the field error into the robot frame so zero error is always
-        // zero power
+        // rotates the field error into the robot frame
+        // so zero error is always zero power
         double heading = Math.toRadians(pose.getHeading());
         double sin = Math.sin(heading);
         double cos = Math.cos(heading);
@@ -162,8 +163,8 @@ public class Drive {
         odometry.setPose(pose);
     }
 
-    // zeroes the encoders and puts the pose back at (0,0), teleop only and
-    // never during a match because it throws away the position odometry earned
+    // zeroes the encoders and puts the pose back at (0,0)
+    // teleop only, never in a match, it throws away earned position
     public void resetEncodersAndPose() {
         drivetrain.resetEncoders();
         odometry.setPose(new Pose(0, 0, 0));

@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // a position in inches and degrees, units you cannot argue about
 // heading 0 faces field +Y and positive is CCW
+// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 public final class Pose {
 
     public static final DistanceUnit DISTANCE_UNIT = DistanceUnit.INCH;
@@ -42,8 +43,8 @@ public final class Pose {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    // bearing to other in degrees where 0 is straight along +Y, this is what a
-    // turn controller wants to point at a target
+    // bearing to other in degrees, 0 is straight along +Y
+    // this is what a turn controller points at a target
     public double bearingTo(Pose other) {
         return MathUtils.wrapDegrees(Math.toDegrees(Math.atan2(other.x - x, other.y - y)));
     }

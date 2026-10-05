@@ -28,8 +28,8 @@ public class Pidf {
         this.feedForwardVelocity = feedForwardVelocity;
     }
 
-    // clears integral windup and derivative history, call at the start of every
-    // move
+    // clears integral windup and derivative history
+    // call at the start of every move
     public void reset() {
         integral = 0.0;
         lastError = 0.0;
@@ -41,8 +41,8 @@ public class Pidf {
     public double update(double error, double dt) {
         double output = kP * error + kF * feedForwardVelocity;
 
-        // integrate only when dt is sane, so a paused opmode or a dropped frame
-        // does not dump a huge integral into the next update
+        // integrate only when dt is sane
+        // so a paused opmode or dropped frame does not dump a huge integral
         if (dt > 0.0 && dt < 0.5) {
             integral += error * dt;
             output += kI * integral;

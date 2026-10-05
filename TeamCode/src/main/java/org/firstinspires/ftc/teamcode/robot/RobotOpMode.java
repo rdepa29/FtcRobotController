@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.drivetrain.Drive;
 
 // base class for every opmode, loop and stop are final
 // so the odometry update and motor stop always run in order
+// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 public abstract class RobotOpMode extends OpMode {
 
     protected Robot robot;
@@ -61,14 +62,14 @@ public abstract class RobotOpMode extends OpMode {
         return robot.drive();
     }
 
-    // start pose, call once from onInit, applied automatically at the right
-    // moment
+    // start pose, call once from onInit
+    // applied automatically at the right moment
     protected void setStartPose(double xInches, double yInches, double headingDegrees) {
         robot.setStartPose(xInches, yInches, headingDegrees);
     }
 
-    // the autonomous step list, build it in onInit then run it every loop in
-    // onLoop
+    // the autonomous step list, build it in onInit
+    // then run it every loop in onLoop
     protected DriveSequence sequence() {
         sequence.attach(robot.drive());
         return sequence;
@@ -79,8 +80,8 @@ public abstract class RobotOpMode extends OpMode {
         robot.addTelemetry(telemetry);
     }
 
-    // wait until the robot arrives, returns immediately so keep calling it
-    // every loop
+    // wait until the robot arrives, returns immediately
+    // keep calling it every loop
     protected boolean isBusy() {
         return robot.drive().isBusy();
     }

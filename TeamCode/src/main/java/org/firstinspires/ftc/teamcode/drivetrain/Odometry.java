@@ -4,6 +4,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 // where the robot thinks it is, separate from Drivetrain so it swaps cleanly
 // first shipped the biobuzz tags with every field position at {0,0,0}
+// https://ftc-resources.firstinspires.org/ftc/game/manual
 public interface Odometry {
 
     // reads new sensor data, once per loop before getPose

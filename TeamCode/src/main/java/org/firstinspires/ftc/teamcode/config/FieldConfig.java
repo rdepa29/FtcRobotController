@@ -45,7 +45,8 @@ public class FieldConfig {
         return new Pose(tileX(tile), tileY(tile), headingDegrees);
     }
 
-    // same thing from a 1-based column and row, column: 1 for A, 2 for B, ... 6 for F
+    // same thing from a 1-based column and row
+    // column: 1 for A, 2 for B, ... 6 for F
     // row: 1 through 6
     public static Pose cell(int column, int row) {
         return cell(Tile.valueOf("" + (char) ('A' + column - 1) + row), 0.0);

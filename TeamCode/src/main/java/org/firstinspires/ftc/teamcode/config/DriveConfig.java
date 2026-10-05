@@ -47,6 +47,15 @@ public class DriveConfig {
     public double deadZone = 0.05;
     public double maxPower = 1.0;
 
+    /// stick assignments, swap these instead of editing DriverInput
+    // set an axis to StickMotion.None to ignore it
+    // Move is forward/back, Strafe is left/right, Turn is CCW/CW
+    // DriverInput sums an axis into whatever motion it is assigned here
+    public StickMotion leftX = StickMotion.Turn;
+    public StickMotion leftY = StickMotion.None;
+    public StickMotion rightX = StickMotion.Strafe;
+    public StickMotion rightY = StickMotion.Move;
+
     // scales every auto and goTo command
     public double autoPowerScale = 1.0;
 

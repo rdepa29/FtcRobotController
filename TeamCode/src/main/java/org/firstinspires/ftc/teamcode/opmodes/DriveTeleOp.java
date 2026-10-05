@@ -2,29 +2,30 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.config.DriverInput;
 import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
-import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // the teleop to start with, drives the whole drivetrain and nothing else
 // left bumper toggles robot-relative and field-relative
+// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 @TeleOp(name = "Drive: TeleOp", group = "01 Drive")
 public class DriveTeleOp extends RobotOpMode {
 
+    private final DriverInput input = new DriverInput(DriveConfig.ROBOT);
     private double fieldRelative = 1.0;
     private boolean toggled;
 
     @Override
     protected void onInit() {
         telemetry.setMsTransmissionInterval(50);
-        telemetry.addLine("Left stick: forward/back    Right stick X: strafe    Y: turn");
+        telemetry.addLine("Sticks: " + input.mapping());
         telemetry.addLine("LB toggles robot-relative / field-relative");
+        telemetry.addLine("LS click zeroes the pose");
     }
 
     @Override
     protected void onLoop() {
-        double forward = gamepad1.left_stick_y;
-        double strafe = -gamepad1.right_stick_x;
-        double turn = -gamepad1.right_stick_y;
+        input.update(gamepad1);
 
         if (gamepad1.left_bumper && !toggled) {
             fieldRelative = -fieldRelative;
@@ -33,14 +34,10 @@ public class DriveTeleOp extends RobotOpMode {
             toggled = false;
         }
 
-        forward = MathUtils.applyDeadZone(forward, DriveConfig.ROBOT.deadZone);
-        strafe = MathUtils.applyDeadZone(strafe, DriveConfig.ROBOT.deadZone);
-        turn = MathUtils.applyDeadZone(turn, DriveConfig.ROBOT.deadZone);
-
         if (fieldRelative > 0) {
-            drive().driveField(forward, strafe, turn);
+            drive().driveField(input.forward(), input.strafe(), input.turn());
         } else {
-            drive().setPower(forward, strafe, turn);
+            drive().setPower(input.forward(), input.strafe(), input.turn());
         }
 
         if (gamepad1.left_stick_button) {
@@ -48,6 +45,8 @@ public class DriveTeleOp extends RobotOpMode {
         }
 
         telemetry.addData("Mode", fieldRelative > 0 ? "field-relative" : "robot-relative");
+        telemetry.addData("Drive", "%+.2f %+.2f %+.2f",
+                input.forward(), input.strafe(), input.turn());
         publishTelemetry();
     }
 }

@@ -30,7 +30,7 @@ public class DifferentialDrive implements Drivetrain {
 
     @Override
     public void drive(double pitch, double roll, double yaw) {
-        // roll is dropped, see class comment
+        // roll is dropped, a differential base cannot strafe
         double left = pitch - yaw;
         double right = pitch + yaw;
 

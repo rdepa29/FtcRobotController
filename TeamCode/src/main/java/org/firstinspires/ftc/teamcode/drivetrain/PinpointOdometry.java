@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.config.DriveConfig;
 
 // the only file that talks to the pinpoint driver directly
 // set offsets and directions before resetPosAndIMU, with the robot still
-// podX positive LEFT of center, podY positive FORWARD
-// rotating in place holds within about 4in, a sign that swings is wrong
+// podX positive LEFT, podY positive FORWARD, rotating in place holds within 4in
+// https://www.gobilda.com/content/user_manuals/3110-0002-0001%20User%20Guide.pdf
 public class PinpointOdometry implements Odometry {
 
     private final GoBildaPinpointDriver pinpoint;
@@ -48,8 +48,7 @@ public class PinpointOdometry implements Odometry {
     }
 
     // re-zeroes and recalibrates the gyro
-    // call from init_loop with the robot still
-    // and again whenever you know exactly where it is
+    // call from init_loop with the robot still, and again whenever you know exactly where it is
     public void recalibrate() {
         if (pinpoint == null) {
             return;
@@ -58,8 +57,8 @@ public class PinpointOdometry implements Odometry {
         pinpoint.resetPosAndIMU();
     }
 
-    // true once the driver has powered up and calibrated, do not setPose before
-    // this or the calibration that follows throws the correction away
+    // true once the driver has powered up and calibrated
+    // do not setPose before this, the calibration discards it
     public boolean isReady() {
         if (pinpoint == null) {
             return false;
