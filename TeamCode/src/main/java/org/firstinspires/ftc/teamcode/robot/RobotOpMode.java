@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.drivetrain.Drive;
 
 // base class for every opmode, loop and stop are final
@@ -15,7 +15,7 @@ public abstract class RobotOpMode extends OpMode {
     // override to change the config or the chassis type, call super.init first
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, DriveConfig.ROBOT, Robot.Chassis.MECANUM);
+        robot = new Robot(hardwareMap, telemetry, RobotConfig.ROBOT, Robot.Chassis.MECANUM);
         sequence = new DriveSequence();
         onInit();
     }

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
-import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.config.RobotConfig;
 
 // the only file that talks to the pinpoint driver directly
 // set offsets and directions before resetPosAndIMU, with the robot still
@@ -15,11 +15,11 @@ import org.firstinspires.ftc.teamcode.config.DriveConfig;
 public class PinpointOdometry implements Odometry {
 
     private final GoBildaPinpointDriver pinpoint;
-    private final DriveConfig config;
+    private final RobotConfig config;
     private final String deviceName;
     private Pose lastPose = new Pose(0, 0, 0);
 
-    public PinpointOdometry(HardwareMap hardwareMap, DriveConfig config) {
+    public PinpointOdometry(HardwareMap hardwareMap, RobotConfig config) {
         this.config = config;
         this.deviceName = config.pinpoint;
         this.pinpoint = find(hardwareMap);

@@ -210,7 +210,7 @@ void addTelemetry(Telemetry telemetry)
 - `goTo` to a target already within `positionToleranceInches` (default 2.0) does nothing and
   reports not busy. It is a no-op rather than a jitter around the goal.
 - There is no `goTo(x, y, heading, tolerance)` overload. Tolerance is tuned in one place,
-  `DriveConfig`, rather than at every call site.
+  `RobotConfig`, rather than at every call site.
 
 ### `DriveSequence` — multi-step autonomous
 
@@ -297,8 +297,8 @@ No SDK types, so this is the one file in the module that can be unit tested with
 
 ## Configuring the robot
 
-All hardware and tuning lives in `config/DriveConfig.java` as a single static instance,
-`DriveConfig.ROBOT`. You should not be constructing your own.
+All hardware and tuning lives in `config/RobotConfig.java` as a single static instance,
+`RobotConfig.ROBOT`. You should not be constructing your own.
 
 ```java
 // Motor names must match the Driver Station configuration exactly, including case.
@@ -411,7 +411,7 @@ Known gaps, so nobody spends an afternoon rediscovering them:
 ```
 TeamCode/src/main/java/org/firstinspires/ftc/teamcode/
 ├── config/
-│   ├── DriveConfig            hardware names, directions, gains, tolerances
+│   ├── RobotConfig            hardware names, directions, gains, tolerances
 │   └── FieldConfig            field geometry, Tile enum, object dimensions
 ├── drivetrain/
 │   ├── Pose                   inches + degrees, wraps the SDK Pose2D

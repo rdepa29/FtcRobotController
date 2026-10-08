@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // manual or non-blocking goTo, field is 144x144in
@@ -11,7 +11,7 @@ public class Drive {
 
     private final Drivetrain drivetrain;
     private final Odometry odometry;
-    private final DriveConfig config;
+    private final RobotConfig config;
 
     // non-null while steering at a target
     private Pose target;
@@ -20,7 +20,7 @@ public class Drive {
     private double yError;
     private double headingError;
 
-    public Drive(Drivetrain drivetrain, Odometry odometry, DriveConfig config) {
+    public Drive(Drivetrain drivetrain, Odometry odometry, RobotConfig config) {
         this.drivetrain = drivetrain;
         this.odometry = odometry;
         this.config = config;

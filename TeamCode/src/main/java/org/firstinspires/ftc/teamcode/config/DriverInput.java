@@ -4,15 +4,15 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 /// reads a gamepad into forward, strafe and turn
-// the mapping lives in DriveConfig, this only follows it
+// the mapping lives in RobotConfig, this only follows it
 public class DriverInput {
 
-    private final DriveConfig config;
+    private final RobotConfig config;
     private double forward;
     private double strafe;
     private double turn;
 
-    public DriverInput(DriveConfig config) {
+    public DriverInput(RobotConfig config) {
         this.config = config;
     }
 

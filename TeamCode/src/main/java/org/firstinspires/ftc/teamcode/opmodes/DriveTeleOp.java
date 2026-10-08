@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.config.DriverInput;
 import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
 
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
 @TeleOp(name = "Drive: TeleOp", group = "01 Drive")
 public class DriveTeleOp extends RobotOpMode {
 
-    private final DriverInput input = new DriverInput(DriveConfig.ROBOT);
+    private final DriverInput input = new DriverInput(RobotConfig.ROBOT);
     private double fieldRelative = 1.0;
     private boolean toggled;
 

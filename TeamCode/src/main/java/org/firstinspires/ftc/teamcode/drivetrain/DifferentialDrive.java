@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // tank mixing, strafe dropped because a differential base cannot do it
@@ -13,10 +13,10 @@ public class DifferentialDrive implements Drivetrain {
     private final DriveMotor frontRight;
     private final DriveMotor backLeft;
     private final DriveMotor backRight;
-    private final DriveConfig config;
+    private final RobotConfig config;
     private final double[] powers = new double[4];
 
-    public DifferentialDrive(HardwareMap hardwareMap, DriveConfig config) {
+    public DifferentialDrive(HardwareMap hardwareMap, RobotConfig config) {
         this.config = config;
         this.frontLeft = DriveMotor.create(hardwareMap, config.frontLeft,
                 config.frontLeftDirection, config.zeroPowerBehavior);

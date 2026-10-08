@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
 // hardware names and measurements for this robot, the only file that holds either
 // https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
-public class DriveConfig {
+public class RobotConfig {
 
     // must match driver station exactly, case included
     public String frontLeft = "FL";
@@ -87,5 +87,5 @@ public class DriveConfig {
     public double podYOffsetInches = 0.75;
 
     // shared instance everything else reads
-    public static final DriveConfig ROBOT = new DriveConfig();
+    public static final RobotConfig ROBOT = new RobotConfig();
 }

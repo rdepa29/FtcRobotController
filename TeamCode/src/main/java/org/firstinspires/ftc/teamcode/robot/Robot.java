@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.drivetrain.DifferentialDrive;
 import org.firstinspires.ftc.teamcode.drivetrain.Drive;
 import org.firstinspires.ftc.teamcode.drivetrain.Drivetrain;
@@ -25,7 +25,7 @@ public class Robot {
 
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
-    private final DriveConfig config;
+    private final RobotConfig config;
     private final Chassis chassis;
 
     private Drivetrain drivetrain;
@@ -33,7 +33,7 @@ public class Robot {
     private Drive drive;
     private Pose startPose;
 
-    public Robot(HardwareMap hardwareMap, Telemetry telemetry, DriveConfig config, Chassis chassis) {
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry, RobotConfig config, Chassis chassis) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.config = config;
@@ -49,7 +49,7 @@ public class Robot {
                     : new MecanumDrive(hardwareMap, config);
             if (!drivetrain.isAvailable()) {
                 telemetry.addData("Robot",
-                        "WARNING: drivetrain is missing motors. Check the names in DriveConfig "
+                        "WARNING: drivetrain is missing motors. Check the names in RobotConfig "
                                 + "against hardware.xml.");
             }
         }
@@ -120,7 +120,7 @@ public class Robot {
         }
     }
 
-    public DriveConfig getConfig() {
+    public RobotConfig getConfig() {
         return config;
     }
 

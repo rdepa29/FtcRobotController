@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // fallback odometry from the drive encoders plus the hub imu named "imu"
@@ -27,7 +27,7 @@ public class EncoderOdometry implements Odometry {
     private double yVelocity;
     private double yawVelocity;
 
-    public EncoderOdometry(HardwareMap hardwareMap, Drivetrain drivetrain, DriveConfig config) {
+    public EncoderOdometry(HardwareMap hardwareMap, Drivetrain drivetrain, RobotConfig config) {
         this.motors = drivetrain.getMotors();
         this.imu = findImu(hardwareMap);
 
@@ -71,7 +71,7 @@ public class EncoderOdometry implements Odometry {
         double backRight = inchesSinceLast(ticks[3], 3);
 
         // standard mecanum inverse mixing, forward is all four averaged
-        // lateral alternates sign across the diagonals, a wrong sign is DriveConfig
+        // lateral alternates sign across the diagonals, a wrong sign is RobotConfig
         double forward = (frontLeft + frontRight + backLeft + backRight) / 4.0;
         double right = (-frontLeft + frontRight + backLeft - backRight) / 4.0;
 

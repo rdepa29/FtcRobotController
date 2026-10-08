@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.config;
 
 /// what a stick axis is wired to do
-// the driver decides, DriveConfig assigns, DriverInput sums
+// the driver decides, RobotConfig assigns, DriverInput sums
 public enum StickMotion {
     /// ignored, reads as zero
     None,
