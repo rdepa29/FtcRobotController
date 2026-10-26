@@ -117,6 +117,23 @@ if (gamepad1.a) {
 the moment the robot turns: with `setPower`, pushing the stick forward continues in the new
 heading. With `driveField`, pushing forward always goes toward field `+Y`.
 
+The shipped `DriveTeleOp` reads the sticks like this:
+
+| Input | Motion |
+| --- | --- |
+| Left stick Y | Forward and back |
+| Left stick X | Strafe |
+| Right stick X | Rotate |
+| Right stick Y | Ignored |
+
+The mapping is data, not code. `RobotConfig` holds one `StickMotion` per axis and
+`DriverInput` sums each axis into whatever motion it is assigned, so remapping a stick
+means editing `RobotConfig` and nothing else. The gamepad reports a Y axis as `-1` when
+pushed up, so `DriverInput` flips it once on the way in and every motion downstream sees
+up as positive.
+
+The robot starts robot-relative. `LB` toggles to field-relative and back.
+
 See `opmodes/DriveTeleOp.java` for a full version with the field-relative toggle and
 dead-zone handling.
 
@@ -318,6 +335,7 @@ DcMotor.Direction frontLeftDirection = DcMotor.Direction.REVERSE;
 | `wheelBaseInches` | `13.0` | Front-to-back wheel distance |
 | `motorTicksPerRevolution` | `28.0` | From the motor spec sheet |
 | `deadZone` | `0.05` | Gamepad dead zone |
+| `leftX` / `leftY` / `rightX` / `rightY` | `Strafe Move Turn None` | Which stick axis does what |
 | `maxPower` | `1.0` | Ceiling applied to every command |
 | `autoPowerScale` | `1.0` | Scales down motor power in autonomous |
 | `translationalGain` | `0.09` | P gain on position error |
@@ -387,10 +405,11 @@ driving confidently to the wrong tile.
 Known gaps, so nobody spends an afternoon rediscovering them:
 
 - **No vision localization.** This is the big one. The SDK ships all four BIOBUZZ AprilTag
-  clusters, but FIRST published every cluster's field position as `{0,0,0}` with identity
-  orientation. `AprilTagDetection.robotPose` will not return a usable absolute field
-  position out of the box. Odometry is the only reliable position source right now, which
-  is why Pinpoint is the default rather than an optional extra.
+  clusters, but FIRST published no field position for any of them. The tags sit on the
+  bottom faces of the CELLS and the HIVE tips during a match, so there is no fixed pose to
+  look up in the first place. `AprilTagDetection.robotPose` will not return a usable
+  absolute field position out of the box. Odometry is the only reliable position source
+  right now, which is why Pinpoint is the default rather than an optional extra.
 - **No path following.** `goTo` drives a straight line to a point. It does not curve around
   obstacles, hug walls, or follow a spline. Multi-step sequences of `goTo` targets are the
   intended substitute until that exists.

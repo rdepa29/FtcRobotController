@@ -47,19 +47,16 @@ public class RobotConfig {
     public double deadZone = 0.05;
     public double maxPower = 1.0;
 
-    /// stick assignments, swap these instead of editing DriverInput
-    // set an axis to StickMotion.None to ignore it
-    // Move is forward/back, Strafe is left/right, Turn is CCW/CW
-    // DriverInput sums an axis into whatever motion it is assigned here
-    public StickMotion leftX = StickMotion.Turn;
-    public StickMotion leftY = StickMotion.None;
-    public StickMotion rightX = StickMotion.Strafe;
-    public StickMotion rightY = StickMotion.Move;
+    // joystick directions
+    public StickMotion leftX = StickMotion.Strafe;
+    public StickMotion leftY = StickMotion.Move;
+    public StickMotion rightX = StickMotion.Turn;
+    public StickMotion rightY = StickMotion.None;
 
     // scales every auto and goTo command
     public double autoPowerScale = 1.0;
 
-    // closed loop gains, command = error * gain
+    // command = error * gain
     public double translationalGain = 0.09;
     public double headingGain = 0.045;
     public double headingGainDamp = 0.004;
@@ -70,19 +67,16 @@ public class RobotConfig {
     public double headingToleranceDegrees = 2.0;
 
     // odometry hardware
-    // set false to use the encoder fallback even with a pinpoint wired up
+    // false falls back to default imu
     public boolean usePinpoint = true;
     public String pinpoint = "pinpoint";
 
-    public GoBildaPinpointDriver.GoBildaOdometryPods odometryPods =
-            GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
-    public GoBildaPinpointDriver.EncoderDirection xEncoderDirection =
-            GoBildaPinpointDriver.EncoderDirection.FORWARD;
-    public GoBildaPinpointDriver.EncoderDirection yEncoderDirection =
-            GoBildaPinpointDriver.EncoderDirection.REVERSED;
+    public GoBildaPinpointDriver.GoBildaOdometryPods odometryPods = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
+    public GoBildaPinpointDriver.EncoderDirection xEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+    public GoBildaPinpointDriver.EncoderDirection yEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
 
-    // pod offsets from the robot center, signed, in inches
-    // podX forward pod left positive, podY strafe pod forward positive
+    // pod offsets from the robot center, in signed inches
+    // podX is forward pod's left positive, podY is strafe pod's forward positive
     public double podXOffsetInches = -3.75;
     public double podYOffsetInches = 0.75;
 

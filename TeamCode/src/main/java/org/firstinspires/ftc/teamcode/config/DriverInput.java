@@ -23,10 +23,12 @@ public class DriverInput {
         strafe = 0.0;
         turn = 0.0;
 
+        // the gamepad reads -1 when a y axis is pushed up, so it is flipped here
+        // once and every motion downstream sees up as positive
         apply(pad.left_stick_x, config.leftX);
-        apply(pad.left_stick_y, config.leftY);
+        apply(-pad.left_stick_y, config.leftY);
         apply(pad.right_stick_x, config.rightX);
-        apply(pad.right_stick_y, config.rightY);
+        apply(-pad.right_stick_y, config.rightY);
 
         forward = MathUtils.applyDeadZone(forward, config.deadZone);
         strafe = MathUtils.applyDeadZone(strafe, config.deadZone);

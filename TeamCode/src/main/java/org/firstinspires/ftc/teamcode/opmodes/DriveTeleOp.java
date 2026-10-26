@@ -5,14 +5,12 @@ import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.config.DriverInput;
 import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
 
-// the teleop to start with, drives the whole drivetrain and nothing else
-// left bumper toggles robot-relative and field-relative
-// https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 @TeleOp(name = "Drive: TeleOp", group = "01 Drive")
 public class DriveTeleOp extends RobotOpMode {
 
     private final DriverInput input = new DriverInput(RobotConfig.ROBOT);
-    private double fieldRelative = 1.0;
+    // init -> robot relative
+    private boolean fieldRelative;
     private boolean toggled;
 
     @Override
@@ -27,14 +25,15 @@ public class DriveTeleOp extends RobotOpMode {
     protected void onLoop() {
         input.update(gamepad1);
 
+        //
         if (gamepad1.left_bumper && !toggled) {
-            fieldRelative = -fieldRelative;
+            fieldRelative = !fieldRelative;
             toggled = true;
         } else if (!gamepad1.left_bumper) {
             toggled = false;
         }
 
-        if (fieldRelative > 0) {
+        if (fieldRelative) {
             drive().driveField(input.forward(), input.strafe(), input.turn());
         } else {
             drive().setPower(input.forward(), input.strafe(), input.turn());
@@ -44,7 +43,7 @@ public class DriveTeleOp extends RobotOpMode {
             drive().resetEncodersAndPose();
         }
 
-        telemetry.addData("Mode", fieldRelative > 0 ? "field-relative" : "robot-relative");
+        telemetry.addData("Mode", fieldRelative ? "field-relative" : "robot-relative");
         telemetry.addData("Drive", "%+.2f %+.2f %+.2f",
                 input.forward(), input.strafe(), input.turn());
         publishTelemetry();

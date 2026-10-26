@@ -48,9 +48,10 @@ public class Robot {
                     ? new DifferentialDrive(hardwareMap, config)
                     : new MecanumDrive(hardwareMap, config);
             if (!drivetrain.isAvailable()) {
-                telemetry.addData("Robot",
-                        "WARNING: drivetrain is missing motors. Check the names in RobotConfig "
-                                + "against hardware.xml.");
+                telemetry.addData(
+                    "Robot",
+                    "WARNING: drivetrain is missing motors. Check the names in RobotConfig against hardware.xml."
+                );
             }
         }
         return drivetrain;

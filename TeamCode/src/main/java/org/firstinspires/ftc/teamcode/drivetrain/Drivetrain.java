@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 // https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public interface Drivetrain {
 
-    // robot-relative, normalized internally so (1,1,1) is legal
+    // robot-relative, normalized internally so (1, 1, 1) is legal
     void drive(double pitch, double roll, double yaw);
 
     // zero power, encoders untouched

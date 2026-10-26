@@ -10,7 +10,7 @@ public final class MathUtils {
     // smallest heading change that counts as there when rotating
     public static final double DEFAULT_TOLERANCE_DEGREES = 1.5;
 
-    // value clamped to the inclusive range [min,max]
+    // value clamped to the inclusive range [min, max]
     public static double clamp(double value, double min, double max) {
         if (value < min) {
             return min;
@@ -18,7 +18,7 @@ public final class MathUtils {
         return value > max ? max : value;
     }
 
-    // value clamped to [0,max]
+    // value clamped to [0, max]
     public static double clampToMax(double value, double max) {
         return clamp(value, 0.0, max);
     }
@@ -31,7 +31,7 @@ public final class MathUtils {
         return value < 0 ? -1.0 : 0.0;
     }
 
-    // wraps into [-180,180)
+    // wraps into [-180, 180)
     // use this instead of % tricks, which stay wrong on negative input
     public static double wrapDegrees(double degrees) {
         double wrapped = degrees % 360.0;
@@ -44,7 +44,7 @@ public final class MathUtils {
         return wrapped;
     }
 
-    // shortest signed rotation from current to target, always in (-180,180]
+    // shortest signed rotation from current to target, always in (-180, 180]
     // the one for every turn-toward decision, never spins the long way for 2 degrees
     public static double headingError(double current, double target) {
         return wrapDegrees(target - current);

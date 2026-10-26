@@ -90,7 +90,8 @@ public final class Pose {
                 distanceUnit.fromUnit(DISTANCE_UNIT, x),
                 distanceUnit.fromUnit(DISTANCE_UNIT, y),
                 angleUnit,
-                angleUnit.fromUnit(ANGLE_UNIT, heading));
+                angleUnit.fromUnit(ANGLE_UNIT, heading)
+        );
     }
 
     @Override
