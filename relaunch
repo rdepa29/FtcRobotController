@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+ADB="${ANDROID_HOME:-$HOME/Android/Sdk}/platform-tools/adb"
+if [ ! -x "$ADB" ]; then
+    ADB=adb
+fi
+
+"$ADB" shell am start -n com.qualcomm.ftcrobotcontroller/org.firstinspires.ftc.robotcontroller.internal.PermissionValidatorWrapper
