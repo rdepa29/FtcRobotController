@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.util;
 // textbook pidf in FTC-native units so gains can be reasoned about directly
 // nothing calls this yet, it is here for the lifters and flywheels
 public class Pidf {
-
     private final double kP;
     private final double kI;
     private final double kD;
@@ -41,8 +40,7 @@ public class Pidf {
     public double update(double error, double dt) {
         double output = kP * error + kF * feedForwardVelocity;
 
-        // integrate only when dt is sane
-        // so a paused opmode or dropped frame does not dump a huge integral
+        // integrate only when dt is sane so a paused opmode or dropped frame does not dump a huge integral
         if (dt > 0.0 && dt < 0.5) {
             integral += error * dt;
             output += kI * integral;

@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
 // https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 @Autonomous(name = "Drive: Example Auto", group = "01 Drive")
 public class ExampleAuto extends RobotOpMode {
-
     // where the robot starts, change to match your actual starting tile
     private static final double START_X = 24.0;
     private static final double START_Y = 24.0;

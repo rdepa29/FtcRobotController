@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 // heading 0 faces +Y, positive is CCW, api in readme.md
 // https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class Drive {
-
     private final Drivetrain drivetrain;
     private final Odometry odometry;
     private final RobotConfig config;

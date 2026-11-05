@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.robot.RobotOpMode;
 
 @TeleOp(name = "Drive: TeleOp", group = "01 Drive")
 public class DriveTeleOp extends RobotOpMode {
-
     private final DriverInput input = new DriverInput(RobotConfig.ROBOT);
     // init -> robot relative
     private boolean fieldRelative;

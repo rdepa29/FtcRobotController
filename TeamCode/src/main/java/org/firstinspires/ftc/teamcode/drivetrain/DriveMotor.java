@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 // one drive motor, a missing motor is a no-op not a crash
 // a DcMotorEx has no setPosition, only STOP_AND_RESET_ENCODER zeroes it
 public class DriveMotor {
-
     private final String name;
     private final DcMotorEx motor;
 

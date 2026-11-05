@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.util;
 // angle wrapping, clamping, normalization and dead zones
 // no SDK types, so this is the one file that unit tests on a plain jvm
 public final class MathUtils {
-
     private MathUtils() {
     }
 

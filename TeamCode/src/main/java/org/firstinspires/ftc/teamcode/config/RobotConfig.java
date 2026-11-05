@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 // hardware names and measurements for this robot, the only file that holds either
 // https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
 public class RobotConfig {
-
     // must match driver station exactly, case included
     public String frontLeft = "FL";
     public String frontRight = "FR";
@@ -16,19 +15,14 @@ public class RobotConfig {
 
     // motor directions
     // set them all to forward, run teleop, flip any that move the wrong way
-    public DcMotor.Direction frontLeftDirection = DcMotor.Direction.REVERSE;
-    public DcMotor.Direction frontRightDirection = DcMotor.Direction.FORWARD;
+    public DcMotor.Direction frontLeftDirection = DcMotor.Direction.FORWARD;
+    public DcMotor.Direction frontRightDirection = DcMotor.Direction.REVERSE;
     public DcMotor.Direction backLeftDirection = DcMotor.Direction.REVERSE;
     public DcMotor.Direction backRightDirection = DcMotor.Direction.FORWARD;
 
     // coast slides, brake stops crisper and holds position in auto
     // brake is the safer default for auto, it holds position
     public ZeroPowerBehavior zeroPowerBehavior = ZeroPowerBehavior.BRAKE;
-
-    /// mecanum roller arrangement
-    // set true if strafe right moves the robot left
-    // fix it here and not in the mixing
-    public boolean mirrorStrafe = false;
 
     /// measure these, do not guess
     // wheelRadius outer edge to axle, trackWidth face to face
@@ -53,6 +47,11 @@ public class RobotConfig {
     public StickMotion rightX = StickMotion.Turn;
     public StickMotion rightY = StickMotion.None;
 
+    // flips a stick motion
+    public boolean invertMove = true;
+    public boolean invertTurn = false;
+    public boolean invertStrafe = false;
+
     // scales every auto and goTo command
     public double autoPowerScale = 1.0;
 
@@ -71,9 +70,12 @@ public class RobotConfig {
     public boolean usePinpoint = true;
     public String pinpoint = "pinpoint";
 
-    public GoBildaPinpointDriver.GoBildaOdometryPods odometryPods = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
-    public GoBildaPinpointDriver.EncoderDirection xEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
-    public GoBildaPinpointDriver.EncoderDirection yEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+    public GoBildaPinpointDriver.GoBildaOdometryPods odometryPods =
+        GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
+    public GoBildaPinpointDriver.EncoderDirection xEncoderDirection =
+        GoBildaPinpointDriver.EncoderDirection.REVERSED;
+    public GoBildaPinpointDriver.EncoderDirection yEncoderDirection =
+        GoBildaPinpointDriver.EncoderDirection.FORWARD;
 
     // pod offsets from the robot center, in signed inches
     // podX is forward pod's left positive, podY is strafe pod's forward positive

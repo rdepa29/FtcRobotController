@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 // one that only wants the drivetrain never spins up the intake
 // https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
 public class Robot {
-
     // which mixing to build, change this one line when the drivetrain changes
     public enum Chassis {
         MECANUM,

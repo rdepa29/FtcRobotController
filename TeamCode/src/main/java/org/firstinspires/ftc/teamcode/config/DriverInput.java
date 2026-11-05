@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 /// reads a gamepad into forward, strafe and turn
 // the mapping lives in RobotConfig, this only follows it
 public class DriverInput {
-
     private final RobotConfig config;
     private double forward;
     private double strafe;
@@ -29,6 +28,13 @@ public class DriverInput {
         apply(-pad.left_stick_y, config.leftY);
         apply(pad.right_stick_x, config.rightX);
         apply(-pad.right_stick_y, config.rightY);
+
+        if (config.invertMove) {
+            forward = -forward;
+        }
+        if (config.invertTurn) {
+            turn = -turn;
+        }
 
         forward = MathUtils.applyDeadZone(forward, config.deadZone);
         strafe = MathUtils.applyDeadZone(strafe, config.deadZone);
@@ -66,9 +72,11 @@ public class DriverInput {
         return turn;
     }
 
-    // "LX:Turn  LY:None  RX:Strafe  RY:Move", so a remap is visible on the DS
+    // "LX: Strafe, LY: Move, RX: Turn, RY: None", so a remap is visible on the DS
     public String mapping() {
-        return "LX:" + config.leftX + "  LY:" + config.leftY
-                + "  RX:" + config.rightX + "  RY:" + config.rightY;
+        return "LX: " + config.leftX + ", LY: " + config.leftY
+                + ", RX: " + config.rightX + ", RY: " + config.rightY
+                + (config.invertMove ? ", move inverted" : "")
+                + (config.invertTurn ? ", turn inverted" : "");
     }
 }

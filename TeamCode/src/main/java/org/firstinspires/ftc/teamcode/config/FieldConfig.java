@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 
 // https://ftc-resources.firstinspires.org/ftc/game/manual
 public class FieldConfig {
-
     /// field
     public static final double FIELD_SIZE_INCHES = 144.0;
 

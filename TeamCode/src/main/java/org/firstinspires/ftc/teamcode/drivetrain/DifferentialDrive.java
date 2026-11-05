@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 // tank mixing, strafe dropped because a differential base cannot do it
 // https://gm0.org/en/latest/docs/common-mechanisms/drivetrains/holonomic.html
 public class DifferentialDrive implements Drivetrain {
-
     private final DriveMotor frontLeft;
     private final DriveMotor frontRight;
     private final DriveMotor backLeft;

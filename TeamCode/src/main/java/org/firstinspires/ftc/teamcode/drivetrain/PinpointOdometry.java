@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.config.RobotConfig;
 // podX positive LEFT, podY positive FORWARD, rotating in place holds within 4in
 // https://www.gobilda.com/content/user_manuals/3110-0002-0001%20User%20Guide.pdf
 public class PinpointOdometry implements Odometry {
-
     private final GoBildaPinpointDriver pinpoint;
     private final RobotConfig config;
     private final String deviceName;

@@ -6,10 +6,9 @@ import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // the one place the mecanum mixing lives
-// wrong strafing is usually the roller arrangement, set mirrorStrafe first
+// wrong strafing is usually the roller arrangement, set invertStrafe first
 // https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class MecanumDrive implements Drivetrain {
-
     private final DriveMotor frontLeft;
     private final DriveMotor frontRight;
     private final DriveMotor backLeft;
@@ -31,7 +30,7 @@ public class MecanumDrive implements Drivetrain {
 
     @Override
     public void drive(double pitch, double roll, double yaw) {
-        double lateral = config.mirrorStrafe ? -roll : roll;
+        double lateral = config.invertStrafe ? -roll : roll;
 
         powers[0] = pitch + lateral - yaw;
         powers[1] = pitch - lateral + yaw;

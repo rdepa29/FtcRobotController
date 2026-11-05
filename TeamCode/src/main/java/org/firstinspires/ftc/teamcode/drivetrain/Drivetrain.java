@@ -6,7 +6,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 // pitch forward roll right yaw CCW, mecanum and differential both fit
 // https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public interface Drivetrain {
-
     // robot-relative, normalized internally so (1, 1, 1) is legal
     void drive(double pitch, double roll, double yaw);
 

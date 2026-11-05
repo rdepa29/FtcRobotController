@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 // reads positions only, commanding power in RUN_USING_ENCODER is an error
 // https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 public class EncoderOdometry implements Odometry {
-
     private final DriveMotor[] motors;
     private final IMU imu;
     private final double ticksPerInch;

@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.util.MathUtils;
 // heading 0 faces field +Y and positive is CCW
 // https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 public final class Pose {
-
     public static final DistanceUnit DISTANCE_UNIT = DistanceUnit.INCH;
     public static final AngleUnit ANGLE_UNIT = AngleUnit.DEGREES;
 

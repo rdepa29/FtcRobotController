@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 // a long step never loses your place, addWait settles what a loop cannot
 // https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class DriveSequence {
-
     // one step, only ever called from the robot's thread
     public interface Step {
         void begin(Drive drive);

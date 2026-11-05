@@ -102,9 +102,9 @@ Use direct power for anything a driver is doing. It ignores odometry, so it neve
 the position controller and it never drifts.
 
 ```java
-double forward = -gamepad1.left_stick_y;
+double forward =  gamepad1.right_stick_x;
 double strafe  =  gamepad1.left_stick_x;
-double turn    =  gamepad1.right_stick_x;
+double turn    = -gamepad1.left_stick_y;
 
 if (gamepad1.a) {
     drive().driveField(forward, strafe, turn);   // heading-locked to the field
@@ -326,9 +326,9 @@ DcMotor.Direction frontLeftDirection = DcMotor.Direction.REVERSE;
 | Setting | Default | Meaning |
 | --- | --- | --- |
 | `frontLeft` / `frontRight` / `backLeft` / `backRight` | `FL` `FR` `BL` `BR` | Names from the hardware config |
-| `frontLeftDirection` etc. | `REVERSE FORWARD REVERSE FORWARD` | Per-motor direction |
+| `frontLeftDirection` etc. | `FORWARD REVERSE REVERSE FORWARD` | Per-motor direction |
 | `zeroPowerBehavior` | `BRAKE` | What a zero-power command does |
-| `mirrorStrafe` | `false` | Set `true` if the robot strafes the wrong way |
+| `invertStrafe` | `true` | Set `false` if the robot strafes the wrong way |
 | `gearRatio` | `1.0` | **Placeholder. Must be measured.** |
 | `wheelRadiusInches` | `2.0` | Drive wheel radius |
 | `trackWidthInches` | `15.0` | Left-to-right wheel distance |
@@ -336,6 +336,7 @@ DcMotor.Direction frontLeftDirection = DcMotor.Direction.REVERSE;
 | `motorTicksPerRevolution` | `28.0` | From the motor spec sheet |
 | `deadZone` | `0.05` | Gamepad dead zone |
 | `leftX` / `leftY` / `rightX` / `rightY` | `Strafe Move Turn None` | Which stick axis does what |
+| `invertMove` / `invertTurn` | `true` / `false` | Flips that motion without rewiring motors |
 | `maxPower` | `1.0` | Ceiling applied to every command |
 | `autoPowerScale` | `1.0` | Scales down motor power in autonomous |
 | `translationalGain` | `0.09` | P gain on position error |
@@ -389,7 +390,7 @@ driving confidently to the wrong tile.
 
 1. Confirm the four motor names resolve and `drivetrain().isAvailable()` is `true`.
 2. Set the robot on blocks. Run a teleop and check that forward is forward, and that
-   strafing does not rotate the robot. Fix directions; set `mirrorStrafe` if needed.
+   strafing does not rotate the robot. Fix directions; set `invertStrafe` if needed.
 3. Pinpoint only: rotate the robot in place. Position should stay within about 4 inches. If
    it swings, a pod offset has the wrong sign — see the goBILDA guide in the references.
 4. Tap a wheel and watch the encoder count in the right direction and magnitude.

@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.drivetrain.Drive;
 // so the odometry update and motor stop always run in order
 // https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/12.0.0/index.html
 public abstract class RobotOpMode extends OpMode {
-
     protected Robot robot;
     private DriveSequence sequence;
 
