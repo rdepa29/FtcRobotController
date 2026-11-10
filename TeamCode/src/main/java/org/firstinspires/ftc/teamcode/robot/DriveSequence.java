@@ -26,6 +26,23 @@ public class DriveSequence {
         }
     }
 
+    private static final class TargetCoordinates implements Step {
+        final double x;
+        final double y;
+        final double heading;
+
+        TargetCoordinates(double x, double y, double heading) {
+            this.x = x;
+            this.y = y;
+            this.heading = heading;
+        }
+
+        @Override
+        public void begin(Drive drive) {
+            drive.goTo(x, y, heading);
+        }
+    }
+
     private static final class Turn implements Step {
         final double degrees;
 
@@ -73,9 +90,10 @@ public class DriveSequence {
     }
 
     // appends a drive to this point facing this way
+    // coordinates are in the units set in RobotConfig
     // name, shows up in telemetry while this step runs
-    public DriveSequence add(String name, double x, double y, double headingDegrees) {
-        return add(new Target(new Pose(x, y, headingDegrees)), name);
+    public DriveSequence add(String name, double x, double y, double heading) {
+        return add(new TargetCoordinates(x, y, heading), name);
     }
 
     // appends a drive to a pose

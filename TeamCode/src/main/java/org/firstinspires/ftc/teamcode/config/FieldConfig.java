@@ -1,14 +1,18 @@
 package org.firstinspires.ftc.teamcode.config;
 
 import org.firstinspires.ftc.teamcode.drivetrain.Pose;
+import org.firstinspires.ftc.teamcode.util.Length;
 
 // https://ftc-resources.firstinspires.org/ftc/game/manual
 public class FieldConfig {
     /// field
-    public static final double FIELD_SIZE_INCHES = 144.0;
+    // 144 inches, use FIELD_SIZE.toCm() or to(DistanceUnit.CM) for another unit
+    public static final Length FIELD_SIZE = Length.inches(144.0);
+    public static final double FIELD_SIZE_INCHES = FIELD_SIZE.toInches();
 
     // 36 tiles 6 by 6, 24in square
-    public static final double TILE_SIZE_INCHES = 24.0;
+    public static final Length TILE_SIZE = Length.inches(24.0);
+    public static final double TILE_SIZE_INCHES = TILE_SIZE.toInches();
     public static final int TILES_PER_SIDE = 6;
 
     // tile coordinates

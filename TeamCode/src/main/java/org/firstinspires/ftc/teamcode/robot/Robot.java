@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.drivetrain.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointOdometry;
 import org.firstinspires.ftc.teamcode.drivetrain.Pose;
+import org.firstinspires.ftc.teamcode.util.Angle;
+import org.firstinspires.ftc.teamcode.util.Length;
 
 // builds each module the first time an opmode asks for it
 // one that only wants the drivetrain never spins up the intake
@@ -37,6 +39,7 @@ public class Robot {
         this.telemetry = telemetry;
         this.config = config;
         this.chassis = chassis;
+        this.startPose = config.startPose();
     }
 
     /// lazy modules
@@ -83,9 +86,19 @@ public class Robot {
 
     /// lifecycle
     // declares where the robot starts, in field coordinates
+    // coordinates are in the units set in RobotConfig
     // call from init(), startUp applies it, a calibrating pinpoint discards it
-    public void setStartPose(double xInches, double yInches, double headingDegrees) {
-        this.startPose = new Pose(xInches, yInches, headingDegrees);
+    public void setStartPose(double x, double y, double heading) {
+        this.startPose = new Pose(x, y, heading, config.distanceUnit, config.angleUnit);
+    }
+
+    public void setStartPose(Length x, Length y, Angle heading) {
+        this.startPose = new Pose(x, y, heading);
+    }
+
+    // puts the pose back at the declared start, teleop use only
+    public void resetToStartPose() {
+        drive().resetEncodersAndPose(startPose != null ? startPose : config.startPose());
     }
 
     // called once per loop from init_loop while the robot is still held

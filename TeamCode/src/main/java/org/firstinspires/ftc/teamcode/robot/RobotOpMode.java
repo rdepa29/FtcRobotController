@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.drivetrain.Drive;
+import org.firstinspires.ftc.teamcode.util.Angle;
+import org.firstinspires.ftc.teamcode.util.Length;
 
 // base class for every opmode, loop and stop are final
 // so the odometry update and motor stop always run in order
@@ -62,9 +64,19 @@ public abstract class RobotOpMode extends OpMode {
     }
 
     // start pose, call once from onInit
+    // coordinates are in the units set in RobotConfig
     // applied automatically at the right moment
-    protected void setStartPose(double xInches, double yInches, double headingDegrees) {
-        robot.setStartPose(xInches, yInches, headingDegrees);
+    protected void setStartPose(double x, double y, double heading) {
+        robot.setStartPose(x, y, heading);
+    }
+
+    protected void setStartPose(Length x, Length y, Angle heading) {
+        robot.setStartPose(x, y, heading);
+    }
+
+    // returns to the declared start pose, teleop use only
+    protected void resetToStartPose() {
+        robot.resetToStartPose();
     }
 
     // the autonomous step list, build it in onInit

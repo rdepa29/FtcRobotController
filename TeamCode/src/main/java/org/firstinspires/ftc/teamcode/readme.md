@@ -117,6 +117,10 @@ if (gamepad1.a) {
 the moment the robot turns: with `setPower`, pushing the stick forward continues in the new
 heading. With `driveField`, pushing forward always goes toward field `+Y`.
 
+Both are relative to the start pose configured in `RobotConfig`. That is what makes
+field-relative driving repeatable instead of relative to wherever the robot happened to
+power on.
+
 The shipped `DriveTeleOp` reads the sticks like this:
 
 | Input | Motion |
@@ -153,6 +157,51 @@ Every position in this codebase is **inches on a 144 x 144 inch field**.
 | Heading `+90` | facing along field `+X` |
 | Positive rotation | counter-clockwise |
 
+### Units
+
+`RobotConfig` sets the units you write in, not the units the robot stores. The robot
+keeps inches and degrees internally, so the control math never changes when you switch:
+
+```java
+public DistanceUnit distanceUnit = DistanceUnit.INCH;   // or CM, MM, METER
+public AngleUnit angleUnit = AngleUnit.DEGREES;         // or RADIANS
+```
+
+Every measurement in `RobotConfig` and every coordinate passed to `goTo`, `turnTo`,
+`setStartPose`, and `DriveSequence.add` is read in those units. Tolerance fields are
+in the same units too. If you switch to centimeters, `positionTolerance = 5.0` means
+5 cm.
+
+For a single value with its unit attached, use `Length` and `Angle`:
+
+```java
+Length fieldSize = FieldConfig.FIELD_SIZE;          // 144 in
+double cm = fieldSize.toCm();                        // 365.76
+double inches = fieldSize.toInches();                // 144.0
+
+Length armReach = Length.centimeters(40.0);
+Angle turn = Angle.radians(Math.PI / 2);
+```
+
+`FieldConfig.FIELD_SIZE` and `FieldConfig.TILE_SIZE` are `Length` values. The older
+`FIELD_SIZE_INCHES` and `TILE_SIZE_INCHES` constants are still there for existing code.
+
+### Where the field origin is
+
+The field origin is whatever `RobotConfig` says it is:
+
+```java
+public double startX = 0.0;          // inches, or distanceUnit
+public double startY = 0.0;
+public double startHeading = 0.0;    // degrees, or angleUnit
+```
+
+`Robot` applies that start pose before the match, so field-relative driving and `goTo`
+share one fixed reference. Set it to the robot's real starting tile and facing
+direction. Pressing the left stick button in teleop resets the pose to this same
+start, not to `(0, 0)`.
+
+
 The tile grid uses the letters the competition manual uses, `A`-`F` across and `1`-`6` up.
 `FieldConfig.cell()` turns a tile into a position so you never have to compute one:
 
@@ -167,8 +216,9 @@ drive().goTo(FieldConfig.tileX(Tile.C3), FieldConfig.tileY(Tile.C3));
 
 > The origin corner and the direction of increasing row numbers are **not yet confirmed**
 > against a real field. They are consistent and the math is correct, but if your robot
-> drives to the wrong place, this table is the first thing to check, not the control loop.
-> See `FieldConfig` for the specific values still marked `MEASURE`.
+> drives to the wrong place, set `RobotConfig.startX`, `startY`, and `startHeading` to the
+> robot's real starting tile first, then check this table. See `FieldConfig` for the
+> specific values still marked `MEASURE`.
 
 ### The rotation gotcha
 
@@ -196,11 +246,15 @@ void setPower(double forward, double strafe, double turn)
 void driveField(double forward, double strafe, double turn)
 void stop()
 
-void goTo(double xInches, double yInches)
-void goTo(double xInches, double yInches, double headingDegrees)
+void goTo(double x, double y)
+void goTo(double x, double y, double heading)
+void goTo(Length x, Length y)
+void goTo(Length x, Length y, Angle heading)
 void goTo(Pose pose)
-void turnTo(double headingDegrees)
+void turnTo(double heading)
+void turnTo(Angle heading)
 void turnBy(double degrees)
+void turnBy(Angle degrees)
 
 void update()
 boolean isBusy()
@@ -220,11 +274,13 @@ void addTelemetry(Telemetry telemetry)
 
 - `forward`, `strafe`, `turn` are all in `-1.0 .. 1.0`. **Positive strafe is the robot's
   left.** `turn` is counter-clockwise.
+- Numeric coordinates and headings are read in `RobotConfig.distanceUnit` and
+  `RobotConfig.angleUnit`. `Length` and `Angle` overloads are always explicit.
 - `goTo`, `turnTo`, and `turnBy` are **non-blocking**. They set a target and return
   immediately. The base class calls `update()` for you every loop.
 - Calling any `setPower` or `driveField` **cancels** an active `goTo`. That is deliberate:
   the driver has taken control, so the autonomous target should not fight them.
-- `goTo` to a target already within `positionToleranceInches` (default 2.0) does nothing and
+- `goTo` to a target already within `positionTolerance` (default 2.0) does nothing and
   reports not busy. It is a no-op rather than a jitter around the goal.
 - There is no `goTo(x, y, heading, tolerance)` overload. Tolerance is tuned in one place,
   `RobotConfig`, rather than at every call site.
@@ -262,19 +318,24 @@ when something misbehaves. The sequence holds no state that a re-run will not re
 ### `Pose` — position
 
 ```java
-double getX(); double getY(); double getHeading()
+double getX(); double getY(); double getHeading()      // inches, degrees
+double getX(DistanceUnit); double getY(DistanceUnit)
+double getHeading(AngleUnit)
+Length getXLength(); Length getYLength(); Angle getHeadingAngle()
 double distanceTo(Pose other)
 double bearingTo(Pose other)
 double headingErrorTo(Pose other)
 Pose translate(double dx, double dy)
+Pose translate(Length dx, Length dy)
 Pose projectForward(double forwardInches)
 Pose projectRight(double rightInches)
 Pose2D toPose2D()
 static Pose fromPose2D(Pose2D pose2D)
 ```
 
-Units are fixed at inches and degrees. This wraps the SDK's `Pose2D` and reports which
-units it is holding, so a value never gets read as the wrong dimension by accident.
+`Pose` stores inches and degrees, which keeps the control loop and odometry in one
+consistent unit. The unit-aware getters convert on read, and the `Length` / `Angle`
+constructors accept whatever unit you are holding.
 
 ### `Drivetrain` — the mixing layer
 
@@ -325,14 +386,18 @@ DcMotor.Direction frontLeftDirection = DcMotor.Direction.REVERSE;
 
 | Setting | Default | Meaning |
 | --- | --- | --- |
+| `distanceUnit` | `INCH` | Units for every distance in the config and in drive coordinates |
+| `angleUnit` | `DEGREES` | Units for every heading in the config and in drive coordinates |
+| `startX` / `startY` / `startHeading` | `0.0` / `0.0` / `0.0` | Where the robot starts, in the units above |
 | `frontLeft` / `frontRight` / `backLeft` / `backRight` | `FL` `FR` `BL` `BR` | Names from the hardware config |
 | `frontLeftDirection` etc. | `FORWARD REVERSE REVERSE FORWARD` | Per-motor direction |
 | `zeroPowerBehavior` | `BRAKE` | What a zero-power command does |
-| `invertStrafe` | `true` | Set `false` if the robot strafes the wrong way |
+| `invertStrafe` | `false` | Set `true` if the robot strafes the wrong way |
 | `gearRatio` | `1.0` | **Placeholder. Must be measured.** |
-| `wheelRadiusInches` | `2.0` | Drive wheel radius |
-| `trackWidthInches` | `15.0` | Left-to-right wheel distance |
-| `wheelBaseInches` | `13.0` | Front-to-back wheel distance |
+| `wheelRadius` | `2.0` | Drive wheel radius |
+| `trackWidth` | `15.0` | Left-to-right wheel distance |
+| `centerTrackWidth` | `13.0` | Center-to-center wheel distance |
+| `wheelBase` | `13.0` | Front-to-back wheel distance |
 | `motorTicksPerRevolution` | `28.0` | From the motor spec sheet |
 | `deadZone` | `0.05` | Gamepad dead zone |
 | `leftX` / `leftY` / `rightX` / `rightY` | `Strafe Move Turn None` | Which stick axis does what |
@@ -342,15 +407,20 @@ DcMotor.Direction frontLeftDirection = DcMotor.Direction.REVERSE;
 | `translationalGain` | `0.09` | P gain on position error |
 | `headingGain` | `0.045` | P gain on heading error |
 | `headingGainDamp` | `0.004` | D gain on heading error |
-| `positionToleranceInches` | `2.0` | "Arrived" threshold |
-| `headingToleranceDegrees` | `2.0` | "Arrived" threshold |
+| `positionTolerance` | `2.0` | "Arrived" threshold, in `distanceUnit` |
+| `headingTolerance` | `2.0` | "Arrived" threshold, in `angleUnit` |
 | `usePinpoint` | `true` | Falls back to encoders if absent |
 | `pinpoint` | `"pinpoint"` | Name from the hardware config |
-| `podXOffsetInches` | `-3.75` | Sideways offset of the forward pod |
-| `podYOffsetInches` | `0.75` | Forward offset of the strafe pod |
+| `podXOffset` | `-3.75` | Sideways offset of the forward pod |
+| `podYOffset` | `0.75` | Forward offset of the strafe pod |
+
+Distance fields are read in `distanceUnit` and angle fields in `angleUnit`. Helpers
+`length(value)`, `angle(value)`, `toInches(value)`, and `toDegrees(value)` are on the
+config if you need the conversion at a call site.
 
 Field geometry and object dimensions live in `config/FieldConfig.java`, and are documented
-inline against the sections of the competition manual they come from.
+inline against the sections of the competition manual they come from. `FIELD_SIZE` and
+`TILE_SIZE` are `Length` values, so `FieldConfig.FIELD_SIZE.toCm()` works directly.
 
 ### The control law, and why there is no `I`
 
@@ -378,10 +448,10 @@ a robot drive wrong rather than fail loudly:
 - `gearRatio` is `1.0`. Encoder-based odometry is **completely wrong** until this is the
   real gear ratio. `EncoderOdometry` is only a fallback, so this mostly matters if the
   Pinpoint is not wired up.
-- `wheelRadiusInches` and `trackWidthInches` are estimates.
+- `wheelRadius` and `trackWidth` are estimates.
 - Motor directions are assumed, not confirmed. If the robot spins instead of driving
   forward, flip the directions before touching any gains.
-- `podXOffsetInches` / `podYOffsetInches` are estimates.
+- `podXOffset` / `podYOffset` are estimates.
 
 ### Bring-up order
 

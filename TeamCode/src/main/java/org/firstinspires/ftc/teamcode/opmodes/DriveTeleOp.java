@@ -17,7 +17,7 @@ public class DriveTeleOp extends RobotOpMode {
         telemetry.setMsTransmissionInterval(50);
         telemetry.addLine("Sticks: " + input.mapping());
         telemetry.addLine("LB toggles robot-relative / field-relative");
-        telemetry.addLine("LS click zeroes the pose");
+        telemetry.addLine("LS click resets pose to the configured start");
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DriveTeleOp extends RobotOpMode {
         }
 
         if (gamepad1.left_stick_button) {
-            drive().resetEncodersAndPose();
+            resetToStartPose();
         }
 
         telemetry.addData("Mode", fieldRelative ? "field-relative" : "robot-relative");

@@ -31,7 +31,7 @@ public class EncoderOdometry implements Odometry {
         this.imu = findImu(hardwareMap);
 
         double ticksPerRevolution = config.motorTicksPerRevolution * config.gearRatio;
-        this.ticksPerInch = ticksPerRevolution / (2.0 * Math.PI * config.wheelRadiusInches);
+        this.ticksPerInch = ticksPerRevolution / (2.0 * Math.PI * config.toInches(config.wheelRadius));
 
         resetTicks();
     }

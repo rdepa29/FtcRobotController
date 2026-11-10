@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.util.Angle;
+import org.firstinspires.ftc.teamcode.util.Length;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
+import org.firstinspires.ftc.teamcode.util.Units;
 
 // a position in inches and degrees, units you cannot argue about
 // heading 0 faces field +Y and positive is CCW
@@ -22,17 +25,55 @@ public final class Pose {
         this.heading = MathUtils.wrapDegrees(heading);
     }
 
+    // coordinates in whatever units the caller is holding
+    public Pose(double x, double y, double heading, DistanceUnit distanceUnit, AngleUnit angleUnit) {
+        this(
+                Units.toInches(x, distanceUnit),
+                Units.toInches(y, distanceUnit),
+                Units.toDegrees(heading, angleUnit));
+    }
+
+    public Pose(Length x, Length y, Angle heading) {
+        this(x.toInches(), y.toInches(), heading.toDegrees());
+    }
+
+    // inches
     public double getX() {
         return x;
     }
 
+    // inches
     public double getY() {
         return y;
+    }
+
+    public double getX(DistanceUnit unit) {
+        return Units.fromInches(x, unit);
+    }
+
+    public double getY(DistanceUnit unit) {
+        return Units.fromInches(y, unit);
+    }
+
+    public Length getXLength() {
+        return Length.inches(x);
+    }
+
+    public Length getYLength() {
+        return Length.inches(y);
     }
 
     // degrees, already wrapped into [-180,180)
     public double getHeading() {
         return heading;
+    }
+
+    public double getHeading(AngleUnit unit) {
+        return Units.fromDegrees(heading, unit);
+    }
+
+    public Angle getHeadingAngle() {
+        return Angle.degrees(heading);
     }
 
     // straight line distance to other, in inches
@@ -58,16 +99,28 @@ public final class Pose {
         return new Pose(x + dx, y + dy, heading);
     }
 
+    public Pose translate(Length dx, Length dy) {
+        return translate(dx.toInches(), dy.toInches());
+    }
+
     // moved forward along our own heading
     public Pose projectForward(double forwardInches) {
         double radians = Math.toRadians(heading);
         return translate(forwardInches * Math.sin(radians), forwardInches * Math.cos(radians));
     }
 
+    public Pose projectForward(Length forward) {
+        return projectForward(forward.toInches());
+    }
+
     // moved right of our own heading
     public Pose projectRight(double rightInches) {
         double radians = Math.toRadians(heading);
         return translate(rightInches * Math.cos(radians), -rightInches * Math.sin(radians));
+    }
+
+    public Pose projectRight(Length right) {
+        return projectRight(right.toInches());
     }
 
     // to the SDK type, fromPose2D is the safe way back

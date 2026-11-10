@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.config.RobotConfig;
+import org.firstinspires.ftc.teamcode.util.Angle;
+import org.firstinspires.ftc.teamcode.util.Length;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 // manual or non-blocking goTo, field is 144x144in
@@ -53,33 +55,56 @@ public class Drive {
 
     /// go there
     // drives to a point and keeps the heading it arrives with
-    public void goTo(double xInches, double yInches) {
-        this.target = new Pose(xInches, yInches, odometry.getPose().getHeading());
-        this.requireHeading = false;
+    // coordinates are in the units set in RobotConfig
+    public void goTo(double x, double y) {
+        goToInches(config.toInches(x), config.toInches(y), odometry.getPose().getHeading(), false);
     }
 
     // drives to a point facing a heading, non-blocking
-    // inside positionToleranceInches already counts as there
-    public void goTo(double xInches, double yInches, double headingDegrees) {
-        this.target = new Pose(xInches, yInches, MathUtils.wrapDegrees(headingDegrees));
-        this.requireHeading = true;
+    // inside positionTolerance already counts as there
+    public void goTo(double x, double y, double heading) {
+        goToInches(config.toInches(x), config.toInches(y), config.toDegrees(heading), true);
+    }
+
+    public void goTo(Length x, Length y) {
+        goToInches(x.toInches(), y.toInches(), odometry.getPose().getHeading(), false);
+    }
+
+    public void goTo(Length x, Length y, Angle heading) {
+        goToInches(x.toInches(), y.toInches(), heading.toDegrees(), true);
     }
 
     // drives to a pose, using its heading
     public void goTo(Pose pose) {
-        goTo(pose.getX(), pose.getY(), pose.getHeading());
+        goToInches(pose.getX(), pose.getY(), pose.getHeading(), true);
+    }
+
+    private void goToInches(double xInches, double yInches, double headingDegrees, boolean holdHeading) {
+        this.target = new Pose(xInches, yInches, MathUtils.wrapDegrees(headingDegrees));
+        this.requireHeading = holdHeading;
     }
 
     // turns in place to a heading, holds with a goTo to the current spot
     // not for short moves
-    public void turnTo(double headingDegrees) {
+    public void turnTo(double heading) {
         Pose pose = odometry.getPose();
-        goTo(pose.getX(), pose.getY(), headingDegrees);
+        goToInches(pose.getX(), pose.getY(), config.toDegrees(heading), true);
+    }
+
+    public void turnTo(Angle heading) {
+        Pose pose = odometry.getPose();
+        goToInches(pose.getX(), pose.getY(), heading.toDegrees(), true);
     }
 
     // turns by a number of degrees, positive is left
     public void turnBy(double degrees) {
-        turnTo(odometry.getPose().getHeading() + degrees);
+        Pose pose = odometry.getPose();
+        goToInches(pose.getX(), pose.getY(), pose.getHeading() + config.toDegrees(degrees), true);
+    }
+
+    public void turnBy(Angle degrees) {
+        Pose pose = odometry.getPose();
+        goToInches(pose.getX(), pose.getY(), pose.getHeading() + degrees.toDegrees(), true);
     }
 
     /// state
@@ -132,10 +157,11 @@ public class Drive {
 
     private boolean isAtTarget() {
         double positionError = Math.sqrt(xError * xError + yError * yError);
-        if (positionError > config.positionToleranceInches) {
+        if (positionError > config.toInches(config.positionTolerance)) {
             return false;
         }
-        return !requireHeading || Math.abs(headingError) <= config.headingToleranceDegrees;
+        return !requireHeading
+                || Math.abs(headingError) <= config.toDegrees(config.headingTolerance);
     }
 
     // forgets the target and hands the wheels back
@@ -153,8 +179,12 @@ public class Drive {
     }
 
     // overrides the computed pose, use at auto start
-    public void setPose(double xInches, double yInches, double headingDegrees) {
-        odometry.setPose(new Pose(xInches, yInches, headingDegrees));
+    public void setPose(double x, double y, double heading) {
+        odometry.setPose(new Pose(x, y, heading, config.distanceUnit, config.angleUnit));
+    }
+
+    public void setPose(Length x, Length y, Angle heading) {
+        odometry.setPose(new Pose(x, y, heading));
     }
 
     // overrides the computed pose
@@ -162,21 +192,25 @@ public class Drive {
         odometry.setPose(pose);
     }
 
-    // zeroes the encoders and puts the pose back at (0,0)
+    // zeroes the encoders and puts the pose back at the configured start
     // teleop only, never in a match, it throws away earned position
     public void resetEncodersAndPose() {
+        resetEncodersAndPose(config.startPose());
+    }
+
+    public void resetEncodersAndPose(Pose pose) {
         drivetrain.resetEncoders();
-        odometry.setPose(new Pose(0, 0, 0));
+        odometry.setPose(pose);
     }
 
     // inches to the target, 0 if there is none
     public double getPositionError() {
-        return Math.sqrt(xError * xError + yError * yError);
+        return config.fromInches(Math.sqrt(xError * xError + yError * yError));
     }
 
     // degrees to the target heading, 0 if there is none
     public double getHeadingError() {
-        return headingError;
+        return config.fromDegrees(headingError);
     }
 
     public Drivetrain getDrivetrain() {
@@ -188,11 +222,17 @@ public class Drive {
     }
 
     public void addTelemetry(Telemetry telemetry) {
-        telemetry.addData("Pose", "x %.1f  y %.1f  h %.1f",
-                getPose().getX(), getPose().getY(), getPose().getHeading());
+        Pose pose = getPose();
+        telemetry.addData("Pose", "x %.1f  y %.1f  h %.1f  (%s, %s)",
+                pose.getX(config.distanceUnit),
+                pose.getY(config.distanceUnit),
+                pose.getHeading(config.angleUnit),
+                config.distanceUnit,
+                config.angleUnit);
         if (isBusy()) {
-            telemetry.addData("Target", "%.1f in / %.1f deg away",
-                    getPositionError(), getHeadingError());
+            telemetry.addData("Target", "%.1f %s / %.1f %s away",
+                    getPositionError(), config.distanceUnit,
+                    getHeadingError(), config.angleUnit);
         }
         drivetrain.addTelemetry(telemetry);
         odometry.addTelemetry(telemetry);

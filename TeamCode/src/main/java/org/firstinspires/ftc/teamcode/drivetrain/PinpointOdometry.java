@@ -38,8 +38,8 @@ public class PinpointOdometry implements Odometry {
     // writes every setting then zeroes, robot has to be still
     private void configure() {
         pinpoint.setOffsets(
-                config.podXOffsetInches,
-                config.podYOffsetInches,
+                config.toInches(config.podXOffset),
+                config.toInches(config.podYOffset),
                 DistanceUnit.INCH);
         pinpoint.setEncoderResolution(config.odometryPods);
         pinpoint.setEncoderDirections(config.xEncoderDirection, config.yEncoderDirection);

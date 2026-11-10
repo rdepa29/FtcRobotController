@@ -3,10 +3,21 @@ package org.firstinspires.ftc.teamcode.config;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drivetrain.Pose;
+import org.firstinspires.ftc.teamcode.util.Angle;
+import org.firstinspires.ftc.teamcode.util.Length;
+import org.firstinspires.ftc.teamcode.util.Units;
 
 // hardware names and measurements for this robot, the only file that holds either
 // https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
 public class RobotConfig {
+    // units used by every measurement in this file and by drive coordinates
+    // the robot stores inches and degrees internally, these are the authoring units
+    public DistanceUnit distanceUnit = DistanceUnit.CM;
+    public AngleUnit angleUnit = AngleUnit.DEGREES;
+
     // must match driver station exactly, case included
     public String frontLeft = "FL";
     public String frontRight = "FR";
@@ -25,12 +36,12 @@ public class RobotConfig {
     public ZeroPowerBehavior zeroPowerBehavior = ZeroPowerBehavior.BRAKE;
 
     /// measure these, do not guess
-    // wheelRadius outer edge to axle, trackWidth face to face
-    // centerTrackWidth center to center, wheelBase front to back
-    public double wheelRadiusInches = 2.0;
-    public double trackWidthInches = 15.0;
-    public double centerTrackWidthInches = 13.0;
-    public double wheelBaseInches = 13.0;
+    // wheelRadius is outer edge to axle, trackWidth face to face
+    // centerTrackWidth is center to center, wheelBase front to back
+    public double wheelRadius = 2.0;
+    public double trackWidth = 15.0;
+    public double centerTrackWidth = 13.0;
+    public double wheelBase = 13.0;
 
     // gearing and encoder
     // gearRatio is reduction from motor shaft to wheel
@@ -61,9 +72,15 @@ public class RobotConfig {
     public double headingGainDamp = 0.004;
 
     // a goTo is done when it is inside every tolerance it needs
-    // 2in is loose on purpose, pinpoint drifts more than that over a full match
-    public double positionToleranceInches = 2.0;
-    public double headingToleranceDegrees = 2.0;
+    // 2 is loose on purpose, pinpoint drifts more than that over a full match
+    public double positionTolerance = 2.0;
+    public double headingTolerance = 2.0;
+
+    // where the robot is when the opmode starts, in the units above
+    // set this to the real starting tile so field-relative means the real field
+    public double startX = 0.0;
+    public double startY = 0.0;
+    public double startHeading = 0.0;
 
     // odometry hardware
     // false falls back to default imu
@@ -77,10 +94,43 @@ public class RobotConfig {
     public GoBildaPinpointDriver.EncoderDirection yEncoderDirection =
         GoBildaPinpointDriver.EncoderDirection.FORWARD;
 
-    // pod offsets from the robot center, in signed inches
+    // pod offsets from the robot center, signed
     // podX is forward pod's left positive, podY is strafe pod's forward positive
-    public double podXOffsetInches = -3.75;
-    public double podYOffsetInches = 0.75;
+    public double podXOffset = -3.75;
+    public double podYOffset = 0.75;
+
+    /// unit helpers
+    // read a number in the configured unit
+    public Length length(double value) {
+        return Length.of(value, distanceUnit);
+    }
+
+    public Angle angle(double value) {
+        return Angle.of(value, angleUnit);
+    }
+
+    // convert a configured number to the internal unit
+    public double toInches(double value) {
+        return Units.toInches(value, distanceUnit);
+    }
+
+    public double toDegrees(double value) {
+        return Units.toDegrees(value, angleUnit);
+    }
+
+    // convert an internal number to the configured unit
+    public double fromInches(double inches) {
+        return Units.fromInches(inches, distanceUnit);
+    }
+
+    public double fromDegrees(double degrees) {
+        return Units.fromDegrees(degrees, angleUnit);
+    }
+
+    // starting pose in field coordinates, already converted to inches and degrees
+    public Pose startPose() {
+        return new Pose(startX, startY, startHeading, distanceUnit, angleUnit);
+    }
 
     // shared instance everything else reads
     public static final RobotConfig ROBOT = new RobotConfig();
