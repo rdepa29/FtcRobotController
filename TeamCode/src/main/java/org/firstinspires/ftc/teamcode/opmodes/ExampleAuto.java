@@ -21,10 +21,10 @@ public class ExampleAuto extends RobotOpMode {
         setStartPose(START_X, START_Y, START_HEADING);
 
         sequence()
-                .add("to first point", START_X + 24.0, START_Y, 0.0)
-                .add("strafe across", START_X + 24.0, START_Y + 36.0, 0.0)
-                .add("turn around", START_X + 24.0, START_Y + 36.0, 180.0)
-                .add("come home", START_X, START_Y, START_HEADING);
+            .add("go forwards", START_X + 36.0, START_Y, START_HEADING)
+            .add("turn around", START_X + 36.0, START_Y, 180.0)
+            .add("go forwards", START_X, START_Y, 180.0)
+            .add("turn around", START_X, START_Y, START_HEADING);
     }
 
     @Override

@@ -24,7 +24,6 @@ public class DriveTeleOp extends RobotOpMode {
     protected void onLoop() {
         input.update(gamepad1);
 
-        //
         if (gamepad1.left_bumper && !toggled) {
             fieldRelative = !fieldRelative;
             toggled = true;
