@@ -5,11 +5,12 @@ Control Hub & Expansion Hub RS485 Connection Ports\
 
 # Drivetrain Motors
 ## Control Hub
-Motor Slot 0: "FL"  | GoBilda 5203 Motor (435 RPM)\
-Motor Slot 1: "BL"  | GoBilda 5203 Motor (435 RPM)\
+Motor Slot 0: "FL"  | GoBilda 5203 Motor (1,150 RPM)\
+Motor Slot 1: "BL"  | GoBilda 5203 Motor (1,150 RPM)\
+Motor Slot 2: "IN"  | GoBilda 5203 Motor (1,150 RPM)\
 ## Expansion Hub
-Motor Slot 0: "FR"  | GoBilda 5203 Motor (435 RPM)\
-Motor Slot 1: "BR"  | GoBilda 5203 Motor (435 RPM)\
+Motor Slot 0: "FR"  | GoBilda 5203 Motor (1,150 RPM)\
+Motor Slot 1: "BR"  | GoBilda 5203 Motor (1,150 RPM)\
 
 # Odometry
 ## Control Hub
