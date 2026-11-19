@@ -11,9 +11,7 @@ public class DriverInput {
     private double strafe;
     private double turn;
 
-    public DriverInput(RobotConfig config) {
-        this.config = config;
-    }
+    public DriverInput(RobotConfig config) { this.config = config; }
 
     /// call once per loop before the values are read
     // y up is forward, x right is negative strafe and negative turn
@@ -29,12 +27,8 @@ public class DriverInput {
         apply(pad.right_stick_x, config.rightX);
         apply(-pad.right_stick_y, config.rightY);
 
-        if (config.invertMove) {
-            forward = -forward;
-        }
-        if (config.invertTurn) {
-            turn = -turn;
-        }
+        if (config.invertMove) { forward = -forward; }
+        if (config.invertTurn) { turn = -turn; }
 
         forward = MathUtils.applyDeadZone(forward, config.deadZone);
         strafe = MathUtils.applyDeadZone(strafe, config.deadZone);
@@ -60,17 +54,11 @@ public class DriverInput {
     }
 
     // forward positive, strafe positive is robot-left, turn positive is CCW
-    public double forward() {
-        return forward;
-    }
+    public double forward() { return forward; }
 
-    public double strafe() {
-        return strafe;
-    }
+    public double strafe() { return strafe; }
 
-    public double turn() {
-        return turn;
-    }
+    public double turn() { return turn; }
 
     // "LX: Strafe, LY: Move, RX: Turn, RY: None", so a remap is visible on the DS
     public String mapping() {

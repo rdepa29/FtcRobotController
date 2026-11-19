@@ -104,36 +104,22 @@ public class RobotConfig {
 
     /// unit helpers
     // read a number in the configured unit
-    public Length length(double value) {
-        return Length.of(value, distanceUnit);
-    }
+    public Length length(double value) { return Length.of(value, distanceUnit); }
 
-    public Angle angle(double value) {
-        return Angle.of(value, angleUnit);
-    }
+    public Angle angle(double value) { return Angle.of(value, angleUnit); }
 
     // convert a configured number to the internal unit
-    public double toInches(double value) {
-        return Units.toInches(value, distanceUnit);
-    }
+    public double toInches(double value) { return Units.toInches(value, distanceUnit); }
 
-    public double toDegrees(double value) {
-        return Units.toDegrees(value, angleUnit);
-    }
+    public double toDegrees(double value) { return Units.toDegrees(value, angleUnit); }
 
     // convert an internal number to the configured unit
-    public double fromInches(double inches) {
-        return Units.fromInches(inches, distanceUnit);
-    }
+    public double fromInches(double inches) { return Units.fromInches(inches, distanceUnit); }
 
-    public double fromDegrees(double degrees) {
-        return Units.fromDegrees(degrees, angleUnit);
-    }
+    public double fromDegrees(double degrees) { return Units.fromDegrees(degrees, angleUnit); }
 
     // starting pose in field coordinates, already converted to inches and degrees
-    public Pose startPose() {
-        return new Pose(startX, startY, startHeading, distanceUnit, angleUnit);
-    }
+    public Pose startPose() { return new Pose(startX, startY, startHeading, distanceUnit, angleUnit); }
 
     // shared instance everything else reads
     public static final RobotConfig ROBOT = new RobotConfig();

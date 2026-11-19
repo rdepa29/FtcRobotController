@@ -28,8 +28,5 @@ public class ExampleAuto extends RobotOpMode {
     }
 
     @Override
-    protected void onLoop() {
-        sequence().run();
-        publishTelemetry();
-    }
+    protected void onLoop() { sequence().run(); publishTelemetry(); }
 }

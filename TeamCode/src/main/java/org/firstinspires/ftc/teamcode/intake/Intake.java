@@ -13,19 +13,11 @@ public class Intake {
         motor.setZeroPowerBehavior(config.zeroPowerBehavior);
     }
 
-    public void setPower(double power) {
-        motor.setPower(power);
-    }
+    public void setPower(double power) { motor.setPower(power); }
 
-    public void in() {
-        motor.setPower(1.0);
-    }
+    public void in() { motor.setPower(1.0); }
 
-    public void out() {
-        motor.setPower(-1.0);
-    }
+    public void out() { motor.setPower(-1.0); }
 
-    public void stop() {
-        motor.setPower(0.0);
-    }
+    public void stop() { motor.setPower(0.0); }
 }

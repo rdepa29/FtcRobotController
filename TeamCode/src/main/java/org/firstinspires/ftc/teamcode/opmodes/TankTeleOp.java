@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-// two-stick tank drive: the left stick drives the "L" side, the right stick drives "R"
-// standalone on purpose, RobotOpMode always builds a four wheel mecanum robot
+// two-stick tank drive (left stick moves left wheels, vice versa for right)
+// built for learner robot
 // https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
 @TeleOp(name = "Drive: Tank TeleOp", group = "01 Drive")
 public class TankTeleOp extends OpMode {
@@ -52,12 +52,8 @@ public class TankTeleOp extends OpMode {
         armServo = claimServo(ARM_SERVO, SERVO_START);
 
         missing = join(unresolved(LEFT_MOTORS, left), unresolved(RIGHT_MOTORS, right));
-        if (arm == null) {
-            missing = join(missing, ARM_MOTOR);
-        }
-        if (armServo == null) {
-            missing = join(missing, ARM_SERVO);
-        }
+        if (arm == null) { missing = join(missing, ARM_MOTOR) }
+        if (armServo == null) { missing = join(missing, ARM_SERVO) }
 
         telemetry.setMsTransmissionInterval(50);
         telemetry.addLine("Left stick L, right stick R | D-pad U/D: Arm | D-pad L/R: ArmServo");
@@ -74,27 +70,13 @@ public class TankTeleOp extends OpMode {
         drive(right, rightPower);
 
         // D-pad up/down controls the Arm motor
-        if (gamepad1.dpad_up) {
-            armPower = ARM_POWER;
-        } else if (gamepad1.dpad_down) {
-            armPower = -ARM_POWER;
-        } else {
-            armPower = 0.0;
-        }
-        if (arm != null) {
-            arm.setPower(armPower);
-        }
+        if (gamepad1.dpad_up) { armPower = ARM_POWER; } else if (gamepad1.dpad_down) { armPower = -ARM_POWER; } else { armPower = 0.0; }
+        if (arm != null) { arm.setPower(armPower) }
 
         // D-pad left/right incrementally moves the ArmServo (0.0 to 1.0)
-        if (gamepad1.dpad_right) {
-            servoPosition += SERVO_STEP;
-        } else if (gamepad1.dpad_left) {
-            servoPosition -= SERVO_STEP;
-        }
+        if (gamepad1.dpad_right) { servoPosition += SERVO_STEP; } else if (gamepad1.dpad_left) { servoPosition -= SERVO_STEP; }
         servoPosition = Range.clip(servoPosition, 0.0, 1.0);
-        if (armServo != null) {
-            armServo.setPosition(servoPosition);
-        }
+        if (armServo != null) { armServo.setPosition(servoPosition); }
 
         telemetry.addData("Sticks", "L %+.2f   R %+.2f", leftPower, rightPower);
         telemetry.addData("Arm", "Power %+.2f   Servo %.2f", armPower, servoPosition);
@@ -105,19 +87,13 @@ public class TankTeleOp extends OpMode {
     // a name the configuration does not have leaves a null instead of throwing
     private DcMotor[] claim(String[] names, DcMotor.Direction direction) {
         DcMotor[] motors = new DcMotor[names.length];
-        for (int i = 0; i < names.length; i++) {
-            motors[i] = claimMotor(names[i], direction);
-        }
+        for (int i = 0; i < names.length; i++) { motors[i] = claimMotor(names[i], direction); }
         return motors;
     }
 
     private DcMotor claimMotor(String name, DcMotor.Direction direction) {
         DcMotor motor;
-        try {
-            motor = hardwareMap.get(DcMotor.class, name);
-        } catch (IllegalArgumentException notConfigured) {
-            return null;
-        }
+        try { motor = hardwareMap.get(DcMotor.class, name); } catch (IllegalArgumentException notConfigured) { return null; }
         motor.setDirection(direction);
         // brake holds the robot still when both sticks are released
         // OpMode.stop() may not touch actuators since SDK 8.2, so this is what stops the wheels
@@ -128,55 +104,34 @@ public class TankTeleOp extends OpMode {
 
     private Servo claimServo(String name, double initialPosition) {
         Servo servo;
-        try {
-            servo = hardwareMap.get(Servo.class, name);
-        } catch (IllegalArgumentException notConfigured) {
-            return null;
-        }
+        try { servo = hardwareMap.get(Servo.class, name); } catch (IllegalArgumentException notConfigured) { return null; }
         servo.setPosition(initialPosition);
         return servo;
     }
 
     private void drive(DcMotor[] motors, double power) {
-        for (DcMotor motor : motors) {
-            if (motor != null) {
-                motor.setPower(power);
-            }
-        }
+        for (DcMotor motor : motors) { if (motor != null) { motor.setPower(power); } }
     }
 
     // dead zone with a rescale, so the output still reaches a full 1
     private static double stick(double raw) {
         double magnitude = Math.abs(raw);
-        if (magnitude <= DEAD_ZONE) {
-            return 0.0;
-        }
+        if (magnitude <= DEAD_ZONE) { return 0.0; }
         return Math.signum(raw) * (magnitude - DEAD_ZONE) / (1.0 - DEAD_ZONE);
     }
 
     private static String unresolved(String[] names, DcMotor[] motors) {
         StringBuilder text = new StringBuilder();
-        for (int i = 0; i < names.length; i++) {
-            if (motors[i] == null) {
-                if (text.length() > 0) {
-                    text.append(", ");
-                }
-                text.append(names[i]);
-            }
-        }
+        for (int i = 0; i < names.length; i++) { if (motors[i] == null) { if (text.length() > 0) { text.append(", "); } text.append(names[i]);  }
         return text.toString();
     }
 
     private static String join(String first, String second) {
-        if (first.isEmpty()) {
-            return second;
-        }
+        if (first.isEmpty()) { return second; }
         return second.isEmpty() ? first : first + ", " + second;
     }
 
     private void reportMissing() {
-        if (!missing.isEmpty()) {
-            telemetry.addData("Missing", missing + " not in the configuration");
-        }
+        if (!missing.isEmpty()) { telemetry.addData("Missing", missing + " not in the configuration"); }
     }
 }

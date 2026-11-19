@@ -24,26 +24,15 @@ public class DriveTeleOp extends RobotOpMode {
     protected void onLoop() {
         input.update(gamepad1);
 
-        if (gamepad1.left_bumper && !toggled) {
-            fieldRelative = !fieldRelative;
-            toggled = true;
-        } else if (!gamepad1.left_bumper) {
-            toggled = false;
-        }
+        if (gamepad1.left_bumper && !toggled) { fieldRelative = !fieldRelative; toggled = true; } else if (!gamepad1.left_bumper) { toggled = false; }
 
-        if (fieldRelative) {
-            drive().driveField(input.forward(), input.strafe(), input.turn());
-        } else {
-            drive().setPower(input.forward(), input.strafe(), input.turn());
-        }
+        if (fieldRelative) { drive().driveField(input.forward(), input.strafe(), input.turn()); } else { drive().setPower(input.forward(), input.strafe(), input.turn()); }
 
-        // Right trigger = intake in, Left trigger = spit out
+        // rt is in, rb is out
         float rb = gamepad1.right_bumper ? 1.0f : 0.0f;
         robot.intake().setPower(gamepad1.right_trigger - rb);
 
-        if (gamepad1.left_stick_button) {
-            resetToStartPose();
-        }
+        if (gamepad1.left_stick_button) { resetToStartPose(); }
 
         telemetry.addData("Mode", fieldRelative ? "field-relative" : "robot-relative");
         telemetry.addData("Drive", "%+.2f %+.2f %+.2f",

@@ -37,21 +37,15 @@ public class FieldConfig {
     }
 
     // tile center as a pose so waypoints can be written by name
-    public static Pose cell(Tile tile) {
-        return cell(tile, 0.0);
-    }
+    public static Pose cell(Tile tile) { return cell(tile, 0.0); }
 
     // tile center as a pose, arriving with the given heading
-    public static Pose cell(Tile tile, double headingDegrees) {
-        return new Pose(tileX(tile), tileY(tile), headingDegrees);
-    }
+    public static Pose cell(Tile tile, double headingDegrees) { return new Pose(tileX(tile), tileY(tile), headingDegrees); }
 
     // same thing from a 1-based column and row
     // column: 1 for A, 2 for B, ... 6 for F
     // row: 1 through 6
-    public static Pose cell(int column, int row) {
-        return cell(Tile.valueOf("" + (char) ('A' + column - 1) + row), 0.0);
-    }
+    public static Pose cell(int column, int row) { return cell(Tile.valueOf("" + (char) ('A' + column - 1) + row), 0.0); }
 
     /// hive structure, the main obstacle
     // base of the frame and its widest point

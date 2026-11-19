@@ -9,21 +9,15 @@ import org.firstinspires.ftc.teamcode.drivetrain.Pose;
 // https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html
 public class DriveSequence {
     // one step, only ever called from the robot's thread
-    public interface Step {
-        void begin(Drive drive);
-    }
+    public interface Step { void begin(Drive drive); }
 
     private static final class Target implements Step {
         final Pose pose;
 
-        Target(Pose pose) {
-            this.pose = pose;
-        }
+        Target(Pose pose) { this.pose = pose; }
 
         @Override
-        public void begin(Drive drive) {
-            drive.goTo(pose);
-        }
+        public void begin(Drive drive) { drive.goTo(pose);
     }
 
     private static final class TargetCoordinates implements Step {
@@ -31,48 +25,31 @@ public class DriveSequence {
         final double y;
         final double heading;
 
-        TargetCoordinates(double x, double y, double heading) {
-            this.x = x;
-            this.y = y;
-            this.heading = heading;
-        }
+        TargetCoordinates(double x, double y, double heading) { this.x = x; this.y = y; this.heading = heading; }
 
         @Override
-        public void begin(Drive drive) {
-            drive.goTo(x, y, heading);
-        }
+        public void begin(Drive drive) { drive.goTo(x, y, heading); }
     }
 
     private static final class Turn implements Step {
         final double degrees;
 
-        Turn(double degrees) {
-            this.degrees = degrees;
-        }
+        Turn(double degrees) { this.degrees = degrees; }
 
         @Override
-        public void begin(Drive drive) {
-            drive.turnBy(degrees);
-        }
+        public void begin(Drive drive) { drive.turnBy(degrees); }
     }
 
     private static final class Wait implements Step {
         final double seconds;
         private final ElapsedTime timer = new ElapsedTime();
 
-        Wait(double seconds) {
-            this.seconds = seconds;
-        }
+        Wait(double seconds) { this.seconds = seconds; }
 
         @Override
-        public void begin(Drive drive) {
-            drive.stop();
-            timer.reset();
-        }
+        public void begin(Drive drive) { drive.stop(); timer.reset(); }
 
-        boolean finished() {
-            return timer.seconds() >= seconds;
-        }
+        boolean finished() { return timer.seconds() >= seconds; }
     }
 
     private final String[] names = new String[16];
@@ -85,38 +62,25 @@ public class DriveSequence {
 
     // hands it the drivetrain, must be called before run
     // the sequence does this for you
-    public void attach(Drive drive) {
-        this.drive = drive;
-    }
+    public void attach(Drive drive) { this.drive = drive; }
 
     // appends a drive to this point facing this way
     // coordinates are in the units set in RobotConfig
     // name, shows up in telemetry while this step runs
-    public DriveSequence add(String name, double x, double y, double heading) {
-        return add(new TargetCoordinates(x, y, heading), name);
-    }
+    public DriveSequence add(String name, double x, double y, double heading) { return add(new TargetCoordinates(x, y, heading), name); }
 
     // appends a drive to a pose
-    public DriveSequence add(String name, Pose pose) {
-        return add(new Target(pose), name);
-    }
+    public DriveSequence add(String name, Pose pose) { return add(new Target(pose), name); }
 
     // appends a relative turn, positive is left
     // from whatever heading the robot has when the step begins
-    public DriveSequence addTurn(String name, double degrees) {
-        return add(new Turn(degrees), name);
-    }
+    public DriveSequence addTurn(String name, double degrees) { return add(new Turn(degrees), name); }
 
     // appends a fixed wait with the wheels stopped
-    public DriveSequence addWait(String name, double seconds) {
-        return add(new Wait(seconds), name);
-    }
+    public DriveSequence addWait(String name, double seconds) { return add(new Wait(seconds), name); }
 
     private DriveSequence add(Step step, String name) {
-        if (count == names.length) {
-            throw new IllegalStateException(
-                    "DriveSequence holds " + names.length + " steps. Split the routine.");
-        }
+        if (count == names.length) { throw new IllegalStateException("DriveSequence holds " + names.length + " steps. Split the routine."); }
         names[count] = name;
         steps[count] = step;
         count++;
@@ -126,65 +90,28 @@ public class DriveSequence {
     // advances at most one step, once per loop
     // does nothing once the sequence is done
     public void run() {
-        if (isDone() || drive == null) {
-            return;
-        }
-        if (index < 0) {
-            index = 0;
-            begin(0);
-            return;
-        }
-        if (activeWait != null) {
-            if (!activeWait.finished()) {
-                return;
-            }
-            activeWait = null;
-        } else if (drive.isBusy()) {
-            return;
-        }
+        if (isDone() || drive == null) { return; }
+        if (index < 0) { index = 0; begin(0); return; }
+        if (activeWait != null) { if (!activeWait.finished()) { return; } activeWait = null; } else if (drive.isBusy()) { return; }
         index++;
-        if (index >= count) {
-            index = -1;
-            drive.stop();
-            return;
-        }
+        if (index >= count) { index = -1; drive.stop(); return; }
         begin(index);
     }
 
-    private void begin(int i) {
-        activeWait = steps[i] instanceof Wait ? (Wait) steps[i] : null;
-        steps[i].begin(drive);
-    }
+    private void begin(int i) { activeWait = steps[i] instanceof Wait ? (Wait) steps[i] : null; steps[i].begin(drive); }
 
     // true once every step is finished, safe to poll forever
-    public boolean isDone() {
-        return index < 0;
-    }
+    public boolean isDone() { return index < 0; }
 
     // name of the step currently running, or the last one run
-    public String getCurrentStep() {
-        if (index < 0 || index >= count) {
-            return count == 0 ? "empty" : "done";
-        }
-        return names[index];
-    }
+    public String getCurrentStep() { if (index < 0 || index >= count) { return count == 0 ? "empty" : "done"; } return names[index]; }
 
     // 0 to 1, useful for a progress bar on the DS
-    public double getProgress() {
-        if (count == 0) {
-            return 1.0;
-        }
-        return Math.max(0.0, Math.min(1.0, (double) index / count));
-    }
+    public double getProgress() { if (count == 0) { return 1.0; } return Math.max(0.0, Math.min(1.0, (double) index / count)); }
 
     // total number of steps
-    public int size() {
-        return count;
-    }
+    public int size() { return count; }
 
     // resets the step list only, the robot stays where it is
-    public void reset() {
-        index = -1;
-        activeWait = null;
-    }
+    public void reset() { index = -1; activeWait = null; }
 }
