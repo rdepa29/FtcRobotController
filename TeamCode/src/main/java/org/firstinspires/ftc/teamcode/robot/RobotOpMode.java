@@ -64,6 +64,8 @@ public abstract class RobotOpMode extends OpMode {
         return robot.drive();
     }
 
+    protected Intake intake() { return robot.intake(); }
+
     // start pose, call once from onInit
     // coordinates are in the units set in RobotConfig
     // applied automatically at the right moment
@@ -85,10 +87,6 @@ public abstract class RobotOpMode extends OpMode {
     protected DriveSequence sequence() {
         sequence.attach(robot.drive());
         return sequence;
-    }
-
-    protected Intake intake() {
-        return robot.intake();
     }
 
     // adds this robot's telemetry, call from onLoop

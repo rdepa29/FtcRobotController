@@ -38,7 +38,8 @@ public class DriveTeleOp extends RobotOpMode {
         }
 
         // Right trigger = intake in, Left trigger = spit out
-        robot.intake().setPower(gamepad1.right_trigger - gamepad1.right_bumper)
+        float rb = gamepad1.right_bumper ? 1.0f : 0.0f;
+        robot.intake().setPower(gamepad1.right_trigger - rb);
 
         if (gamepad1.left_stick_button) {
             resetToStartPose();

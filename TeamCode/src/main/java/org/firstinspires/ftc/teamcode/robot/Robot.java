@@ -36,13 +36,13 @@ public class Robot {
     private Drive drive;
     private Pose startPose;
 
-    public Robot(HardwareMap hardwareMap, Telemetry telemetry, RobotConfig config, Chassis chassis, Intake intake) {
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry, RobotConfig config, Chassis chassis) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.config = config;
         this.chassis = chassis;
         this.startPose = config.startPose();
-        this.intake = intake
+        this.intake = new Intake(hardwareMap, config);
     }
 
     public Intake intake() { return intake; }
