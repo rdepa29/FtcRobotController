@@ -24,12 +24,15 @@ public class RobotConfig {
     public String backLeft = "BL";
     public String backRight = "BR";
 
+    public String intake = "IN";
+
     // motor directions
     // set them all to forward, run teleop, flip any that move the wrong way
     public DcMotor.Direction frontLeftDirection = DcMotor.Direction.FORWARD;
     public DcMotor.Direction frontRightDirection = DcMotor.Direction.REVERSE;
     public DcMotor.Direction backLeftDirection = DcMotor.Direction.REVERSE;
     public DcMotor.Direction backRightDirection = DcMotor.Direction.FORWARD;
+    public DcMotor.Direction intakeDirection = DcMotor.Direction.FORWARD;
 
     // coast slides, brake stops crisper and holds position in auto
     // brake is the safer default for auto, it holds position

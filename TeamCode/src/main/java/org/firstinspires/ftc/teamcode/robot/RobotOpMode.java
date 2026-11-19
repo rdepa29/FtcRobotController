@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.drivetrain.Drive;
+import org.firstinspires.ftc.teamcode.intake.Intake;
 import org.firstinspires.ftc.teamcode.util.Angle;
 import org.firstinspires.ftc.teamcode.util.Length;
 
@@ -84,6 +85,10 @@ public abstract class RobotOpMode extends OpMode {
     protected DriveSequence sequence() {
         sequence.attach(robot.drive());
         return sequence;
+    }
+
+    protected Intake intake() {
+        return robot.intake();
     }
 
     // adds this robot's telemetry, call from onLoop

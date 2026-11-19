@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.drivetrain.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointOdometry;
 import org.firstinspires.ftc.teamcode.drivetrain.Pose;
+import org.firstinspires.ftc.teamcode.intake.Intake;
 import org.firstinspires.ftc.teamcode.util.Angle;
 import org.firstinspires.ftc.teamcode.util.Length;
 
@@ -28,19 +29,23 @@ public class Robot {
     private final Telemetry telemetry;
     private final RobotConfig config;
     private final Chassis chassis;
+    private final Intake intake;
 
     private Drivetrain drivetrain;
     private Odometry odometry;
     private Drive drive;
     private Pose startPose;
 
-    public Robot(HardwareMap hardwareMap, Telemetry telemetry, RobotConfig config, Chassis chassis) {
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry, RobotConfig config, Chassis chassis, Intake intake) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.config = config;
         this.chassis = chassis;
         this.startPose = config.startPose();
+        this.intake = intake
     }
+
+    public Intake intake() { return intake; }
 
     /// lazy modules
     // the drivetrain's motor mixing, built on first use
@@ -131,6 +136,8 @@ public class Robot {
         } else if (drivetrain != null) {
             drivetrain.stop();
         }
+
+        intake.stop();
     }
 
     public RobotConfig getConfig() {
