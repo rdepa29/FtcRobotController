@@ -1,9 +1,9 @@
 # Base Connections
-| Connection A | Connection B |
-| :---: | :---: |
-| Control Hub Battery Connection (F) | I/O Power Switch (M) |
-| Control Hub Battery Connection (M) | Expansion Hub Battery Connection (F) |
-| Control Hub RS485 Connection Port (F) | Expansion Hub RS485 Connection Port (F) |
+| Connection A | C<sup>A</sup> Type | Connection B | C<sup>B</sup> Type |
+| :---: | :---: | :---: | :---: |
+| Control Hub Battery Connection | F | I/O Power Switch | M |
+| Control Hub Battery Connection | M | Expansion Hub Battery Connection | F |
+| Control Hub RS485 Connection Port | F | Expansion Hub RS485 Connection Port | F |
 
 
 # Drivetrain Motors
