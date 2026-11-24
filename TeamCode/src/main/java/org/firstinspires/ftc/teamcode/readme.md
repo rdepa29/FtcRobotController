@@ -102,9 +102,9 @@ Use direct power for anything a driver is doing. It ignores odometry, so it neve
 the position controller and it never drifts.
 
 ```java
-double forward =  gamepad1.right_stick_x;
+double forward = -gamepad1.left_stick_y;
 double strafe  =  gamepad1.left_stick_x;
-double turn    = -gamepad1.left_stick_y;
+double turn    =  gamepad1.right_stick_x;
 
 if (gamepad1.a) {
     drive().driveField(forward, strafe, turn);   // heading-locked to the field
@@ -154,8 +154,8 @@ Every position in this codebase is **inches on a 144 x 144 inch field**.
 | Origin | lower-left corner, `(0, 0)` |
 | `(144, 144)` | upper-right corner |
 | Heading `0` | facing along field `+Y` |
-| Heading `+90` | facing along field `+X` |
-| Positive rotation | counter-clockwise |
+| Heading `+90` | facing along field `-X` |
+| Positive rotation | counter-clockwise, the direction the IMU reports |
 
 ### Units
 
@@ -222,18 +222,33 @@ drive().goTo(FieldConfig.tileX(Tile.C3), FieldConfig.tileY(Tile.C3));
 
 ### The rotation gotcha
 
-FTC's rotation is **not** the usual math convention. Rotating a field vector into the
-robot frame is:
+Headings are counter-clockwise from field `+Y`, the same sign the IMU reports. In that
+frame the robot's forward axis is `(-sin, cos)` and its right axis is `(cos, sin)`, so a
+field vector `(x, y)` turns into a robot command like this:
 
 ```
-[[ sin,  cos],
- [-cos,  sin]]
+forward = -x * sin + y * cos
+strafe  =  x * cos + y * sin      // strafe is positive to the right
 ```
 
-which is the *transpose* of the robot-to-field matrix. Swapping these compiles fine,
-produces believable telemetry, and is the single most common cause of "field-relative
-driving is rotated 90 degrees" bugs. Both directions are written out explicitly in
-`Drive.java` so they are easy to compare.
+`Drive.driveField` takes the stick pair `(forward, strafe)`, which is the field vector
+`(strafe, forward)`. The same rotation then reads:
+
+```
+forward =  forward * cos - strafe * sin
+strafe  =  forward * sin + strafe * cos
+```
+
+At heading 0 that is the identity, which is the test to check first. Feeding the stick pair
+straight into the `(x, y)` pair compiles, produces believable telemetry, and rotates the
+robot by 90 degrees. `Drive.update()` and `Drive.driveField()` must stay the same rotation;
+if one is fixed without the other, `goTo` and field-relative driving disagree by a
+reflection.
+
+The heading itself is only as good as the start pose. `Robot` applies it once during INIT,
+after the Pinpoint finishes its reset. If that write is lost, the field frame is wherever
+the robot booted instead of where you placed it, and field-relative driving looks fine at
+one heading and wrong at every other.
 
 ---
 
@@ -273,7 +288,7 @@ void addTelemetry(Telemetry telemetry)
 ```
 
 - `forward`, `strafe`, `turn` are all in `-1.0 .. 1.0`. **Positive strafe is the robot's
-  left.** `turn` is counter-clockwise.
+  right.** `turn` is counter-clockwise.
 - Numeric coordinates and headings are read in `RobotConfig.distanceUnit` and
   `RobotConfig.angleUnit`. `Length` and `Angle` overloads are always explicit.
 - `goTo`, `turnTo`, and `turnBy` are **non-blocking**. They set a target and return

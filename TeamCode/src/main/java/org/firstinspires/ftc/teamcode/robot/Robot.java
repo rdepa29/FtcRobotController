@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.drivetrain.DifferentialDrive;
 import org.firstinspires.ftc.teamcode.drivetrain.Drive;
@@ -31,6 +32,11 @@ public class Robot {
     private Odometry odometry;
     private Drive drive;
     private Pose startPose;
+    private boolean calibrating;
+    private final ElapsedTime settle = new ElapsedTime();
+
+    // the pinpoint reset is asynchronous, a pose written before it lands is thrown away
+    private static final double PINPOINT_SETTLE_MS = 300;
 
     public Robot(HardwareMap hardwareMap, Telemetry telemetry, RobotConfig config, Chassis chassis) {
         this.hardwareMap = hardwareMap;
@@ -85,14 +91,27 @@ public class Robot {
         Odometry current = odometry();
         if (current instanceof PinpointOdometry) {
             PinpointOdometry pinpoint = (PinpointOdometry) current;
-            if (pinpoint.isReady()) {
-                // recalibrate first, the other order throws the pose away
-                pinpoint.recalibrate(); if (startPose != null) { pinpoint.setPose(startPose); }
+            if (startPose == null) {
+                return;
             }
+            if (!calibrating) {
+                if (!pinpoint.isReady()) {
+                    return;
+                }
+                // recalibrate first, the other order throws the pose away
+                pinpoint.recalibrate();
+                calibrating = true;
+                settle.reset();
+                return;
+            }
+            if (!pinpoint.isReady() || settle.milliseconds() < PINPOINT_SETTLE_MS) {
+                return;
+            }
+            pinpoint.setPose(startPose);
+            startPose = null;
             return;
         }
         // the encoder fallback has nothing to calibrate
-        // apply it once and be done
         if (startPose != null) { current.setPose(startPose); startPose = null; }
     }
 

@@ -14,14 +14,13 @@ public class DriverInput {
     public DriverInput(RobotConfig config) { this.config = config; }
 
     /// call once per loop before the values are read
-    // y up is forward, x right is negative strafe and negative turn
+    // y up is forward, x right is positive strafe and negative turn
     public void update(Gamepad pad) {
         forward = 0.0;
         strafe = 0.0;
         turn = 0.0;
 
-        // the gamepad reads -1 when a y axis is pushed up, so it is flipped here
-        // once and every motion downstream sees up as positive
+        // a y axis reads -1 when pushed up, flip once so up is positive downstream
         apply(pad.left_stick_x, config.leftX);
         apply(-pad.left_stick_y, config.leftY);
         apply(pad.right_stick_x, config.rightX);
@@ -42,7 +41,7 @@ public class DriverInput {
                 forward += raw;
                 break;
             case Strafe:
-                strafe -= raw;
+                strafe += raw;
                 break;
             case Turn:
                 turn -= raw;
@@ -53,7 +52,7 @@ public class DriverInput {
         }
     }
 
-    // forward positive, strafe positive is robot-left, turn positive is CCW
+    // forward positive, strafe positive is robot-right, turn positive is CCW
     public double forward() { return forward; }
 
     public double strafe() { return strafe; }

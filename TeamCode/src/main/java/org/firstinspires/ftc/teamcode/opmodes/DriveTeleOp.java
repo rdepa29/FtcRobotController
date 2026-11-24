@@ -28,9 +28,9 @@ public class DriveTeleOp extends RobotOpMode {
 
         if (fieldRelative) { drive().driveField(input.forward(), input.strafe(), input.turn()); } else { drive().setPower(input.forward(), input.strafe(), input.turn()); }
 
-        // rt is in, rb is out
         float rb = gamepad1.right_bumper ? 1.0f : 0.0f;
-        robot.intake().setPower(gamepad1.right_trigger - rb);
+        float rt = gamepad1.right_trigger;
+        robot.intake().setPower(rb - rt);
 
         if (gamepad1.left_stick_button) { resetToStartPose(); }
 

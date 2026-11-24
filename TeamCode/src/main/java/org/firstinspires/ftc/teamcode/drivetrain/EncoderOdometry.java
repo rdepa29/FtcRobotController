@@ -79,10 +79,10 @@ public class EncoderOdometry implements Odometry {
         double sin = Math.sin(Math.toRadians(heading));
         double cos = Math.cos(Math.toRadians(heading));
 
-        // robot frame into field frame
-        // at heading 0 this gives dx = -right and dy = forward
-        double dx = forward * sin - right * cos;
-        double dy = forward * cos - right * sin;
+        // robot frame into field frame, heading is CCW from +Y
+        // at heading 0 this gives dx = right and dy = forward
+        double dx = -forward * sin + right * cos;
+        double dy = forward * cos + right * sin;
 
         pose = new Pose(pose.getX() + dx, pose.getY() + dy, heading);
 

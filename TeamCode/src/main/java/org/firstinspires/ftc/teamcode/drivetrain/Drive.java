@@ -28,7 +28,7 @@ public class Drive {
     }
 
     /// direct control
-    // -1 to 1, forward, strafe left, turn CCW, cancels any goTo
+    // -1 to 1, forward, strafe right, turn CCW, cancels any goTo
     public void setPower(double forward, double strafe, double turn) {
         cancel();
         drivetrain.drive(forward, strafe, turn);
@@ -39,11 +39,11 @@ public class Drive {
         double heading = Math.toRadians(odometry.getPose().getHeading());
         double sin = Math.sin(heading);
         double cos = Math.cos(heading);
-        // field frame to robot frame, inverse of the rotation in update()
-        // check at heading 0, field +Y pure forward, +X pure strafe right
+        // the stick pair (forward, strafe right) is the field vector (strafe, forward)
+        // heading 0 is the identity, heading 90 turns a forward push into a right strafe
         setPower(
+                forward * cos - strafe * sin,
                 forward * sin + strafe * cos,
-                -forward * cos + strafe * sin,
                 turn);
     }
 
@@ -121,12 +121,12 @@ public class Drive {
         headingError = MathUtils.headingError(pose.getHeading(), target.getHeading());
 
         // rotates the field error into the robot frame
-        // so zero error is always zero power
+        // heading is CCW from +Y, so forward is (-sin, cos) and right is (cos, sin)
         double heading = Math.toRadians(pose.getHeading());
         double sin = Math.sin(heading);
         double cos = Math.cos(heading);
-        double forward = (xError * sin + yError * cos) * config.translationalGain;
-        double strafe = (-xError * cos + yError * sin) * config.translationalGain;
+        double forward = (-xError * sin + yError * cos) * config.translationalGain;
+        double strafe = (xError * cos + yError * sin) * config.translationalGain;
 
         // heading gets a d term, spinning overshoots and the imu sees it
         // position stays p, wheel velocity is a poor signal

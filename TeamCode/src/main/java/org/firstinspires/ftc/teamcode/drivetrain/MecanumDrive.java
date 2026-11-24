@@ -30,12 +30,13 @@ public class MecanumDrive implements Drivetrain {
 
     @Override
     public void drive(double pitch, double roll, double yaw) {
+        // roll is positive to the right, the mixing below is written for that
         double lateral = config.invertStrafe ? -roll : roll;
 
-        powers[0] = pitch + lateral - yaw;
-        powers[1] = pitch - lateral + yaw;
-        powers[2] = pitch - lateral - yaw;
-        powers[3] = pitch + lateral + yaw;
+        powers[0] = pitch - lateral - yaw;
+        powers[1] = pitch + lateral + yaw;
+        powers[2] = pitch + lateral - yaw;
+        powers[3] = pitch - lateral + yaw;
 
         MathUtils.normalize(powers, config.maxPower);
 
