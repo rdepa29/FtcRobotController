@@ -52,8 +52,8 @@ public class TankTeleOp extends OpMode {
         armServo = claimServo(ARM_SERVO, SERVO_START);
 
         missing = join(unresolved(LEFT_MOTORS, left), unresolved(RIGHT_MOTORS, right));
-        if (arm == null) { missing = join(missing, ARM_MOTOR) }
-        if (armServo == null) { missing = join(missing, ARM_SERVO) }
+        if (arm == null) { missing = join(missing, ARM_MOTOR); }
+        if (armServo == null) { missing = join(missing, ARM_SERVO); }
 
         telemetry.setMsTransmissionInterval(50);
         telemetry.addLine("Left stick L, right stick R | D-pad U/D: Arm | D-pad L/R: ArmServo");
@@ -71,7 +71,7 @@ public class TankTeleOp extends OpMode {
 
         // D-pad up/down controls the Arm motor
         if (gamepad1.dpad_up) { armPower = ARM_POWER; } else if (gamepad1.dpad_down) { armPower = -ARM_POWER; } else { armPower = 0.0; }
-        if (arm != null) { arm.setPower(armPower) }
+        if (arm != null) { arm.setPower(armPower); }
 
         // D-pad left/right incrementally moves the ArmServo (0.0 to 1.0)
         if (gamepad1.dpad_right) { servoPosition += SERVO_STEP; } else if (gamepad1.dpad_left) { servoPosition -= SERVO_STEP; }
@@ -122,7 +122,7 @@ public class TankTeleOp extends OpMode {
 
     private static String unresolved(String[] names, DcMotor[] motors) {
         StringBuilder text = new StringBuilder();
-        for (int i = 0; i < names.length; i++) { if (motors[i] == null) { if (text.length() > 0) { text.append(", "); } text.append(names[i]);  }
+        for (int i = 0; i < names.length; i++) { if (motors[i] == null) { if (text.length() > 0) { text.append(", "); } text.append(names[i]); } }
         return text.toString();
     }
 

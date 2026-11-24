@@ -6,18 +6,20 @@ import org.firstinspires.ftc.teamcode.config.RobotConfig;
 
 public class Intake {
     private final DcMotor motor;
+    private final double scale;
 
     public Intake(HardwareMap hardwareMap, RobotConfig config) {
         motor = hardwareMap.get(DcMotor.class, config.intake);
         motor.setDirection(config.intakeDirection);
         motor.setZeroPowerBehavior(config.zeroPowerBehavior);
+        scale = config.intakeMotorPower;
     }
 
     public void setPower(double power) { motor.setPower(power); }
 
-    public void in() { motor.setPower(1.0); }
+    public void in() { motor.setPower(scale); }
 
-    public void out() { motor.setPower(-1.0); }
+    public void out() { motor.setPower(-scale); }
 
     public void stop() { motor.setPower(0.0); }
 }

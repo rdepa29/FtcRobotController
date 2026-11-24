@@ -17,7 +17,7 @@ public class DriveSequence {
         Target(Pose pose) { this.pose = pose; }
 
         @Override
-        public void begin(Drive drive) { drive.goTo(pose);
+        public void begin(Drive drive) { drive.goTo(pose); };
     }
 
     private static final class TargetCoordinates implements Step {

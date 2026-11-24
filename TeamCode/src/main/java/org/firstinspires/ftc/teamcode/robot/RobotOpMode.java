@@ -23,15 +23,15 @@ public abstract class RobotOpMode extends OpMode {
 
     // runs every loop while initializing, robot still held
     @Override
-    public void init_loop() { robot.startUp(); onInitLoop() }
+    public void init_loop() { robot.startUp(); onInitLoop(); }
 
     // refreshes odometry and steers at the target, then runs the opmode
     @Override
-    public final void loop() { robot.drive().update(); onLoop() }
+    public final void loop() { robot.drive().update(); onLoop(); }
 
     // stops the motors, always runs even if the opmode threw
     @Override
-    public final void stop() { robot.shutDown(); onStop() }
+    public final void stop() { robot.shutDown(); onStop(); }
 
     /// hooks
     // one time setup, do not touch the motors, they are not held yet
@@ -48,7 +48,7 @@ public abstract class RobotOpMode extends OpMode {
 
     /// helpers
     // wrapper
-    protected Drive drive() { return robot.drive() }
+    protected Drive drive() { return robot.drive(); }
 
     protected Intake intake() { return robot.intake(); }
 
@@ -56,14 +56,14 @@ public abstract class RobotOpMode extends OpMode {
     // coordinates are in the units set in RobotConfig
     protected void setStartPose(double x, double y, double heading) { robot.setStartPose(x, y, heading); }
 
-    protected void setStartPose(Length x, Length y, Angle heading) { robot.setStartPose(x, y, heading) }
+    protected void setStartPose(Length x, Length y, Angle heading) { robot.setStartPose(x, y, heading); }
 
     // returns to the declared start pose, teleop use only
-    protected void resetToStartPose() { robot.resetToStartPose() }
+    protected void resetToStartPose() { robot.resetToStartPose(); }
 
     // the autonomous step list, build it in onInit
     // then run it every loop in onLoop
-    protected DriveSequence sequence() { sequence.attach(robot.drive()); return sequence }
+    protected DriveSequence sequence() { sequence.attach(robot.drive()); return sequence; }
 
     // adds this robot's telemetry, call from onLoop
     protected void publishTelemetry() { robot.addTelemetry(telemetry); }

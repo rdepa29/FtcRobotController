@@ -69,6 +69,8 @@ public class RobotConfig {
     // scales every auto and goTo command
     public double autoPowerScale = 1.0;
 
+    public double intakeMotorPower = 0.8;
+
     // command = error * gain
     public double translationalGain = 0.09;
     public double headingGain = 0.045;
